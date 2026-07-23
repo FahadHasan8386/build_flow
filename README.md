@@ -1,2 +1,1 @@
-# build_flow
-🚀 BuildFlow - Enterprise Project Management 
+🌍 BuildFlow empowers organizations to plan, execute, and monitor projects from a single platform. 🚀 Featuring multi-tenancy, 🔐 secure authentication, 📊 analytics, 📈 progress tracking, 💰 budget management, 👥 team collaboration, and enterprise-grade architecture built with the .NET ecosystem.
