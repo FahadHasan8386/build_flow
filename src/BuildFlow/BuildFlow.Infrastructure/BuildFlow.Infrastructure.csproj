@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BuildFlow.Application\BuildFlow.Application.csproj" />
+    <ProjectReference Include="..\BuildFlow.Domain\BuildFlow.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
