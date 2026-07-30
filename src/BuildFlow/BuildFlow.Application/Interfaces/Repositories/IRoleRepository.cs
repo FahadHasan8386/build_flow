@@ -1,10 +1,13 @@
-﻿using System;
+﻿using BuildFlow.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Interfaces.Repositories
+namespace BuildFlow.Application.Interfaces.Repositories;
+
+public interface IRoleRepository
 {
-    internal interface IRoleRepository
-    {
-    }
+    Task<Guid> CreateAsync(Role role);
+
+    Task<Role?> GetByNameAsync(Guid tenantId, string roleName);
 }

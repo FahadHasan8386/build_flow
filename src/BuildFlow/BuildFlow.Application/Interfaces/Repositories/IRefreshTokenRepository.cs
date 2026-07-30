@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using BuildFlow.Domain.Entities;
 
-namespace BuildFlow.Application.Interfaces.Repositories
+namespace BuildFlow.Application.Interfaces.Repositories;
+
+public interface IRefreshTokenRepository
 {
-    internal interface IRefreshTokenRepository
-    {
-    }
+    Task CreateAsync(RefreshToken refreshToken);
+
+    Task<RefreshToken?> GetByTokenAsync(string token);
 }

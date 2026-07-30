@@ -1,10 +1,17 @@
-﻿using System;
+﻿using BuildFlow.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Interfaces.Repositories
+namespace BuildFlow.Application.Interfaces.Repositories;
+
+public interface IUserRepository
 {
-    internal interface IUserRepository
-    {
-    }
+    Task<Guid> CreateAsync(User user);
+
+    Task<User?> GetByEmailAsync(string email);
+
+    Task<User?> GetByIdAsync(Guid id);
+
+    Task<bool> ExistsByEmailAsync(string email);
 }
