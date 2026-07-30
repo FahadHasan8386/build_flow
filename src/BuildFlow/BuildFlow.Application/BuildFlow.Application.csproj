@@ -10,4 +10,16 @@
     <ProjectReference Include="..\BuildFlow.Domain\BuildFlow.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="DependencyInjection\" />
+    <Folder Include="Interfaces\Services\" />
+    <Folder Include="Interfaces\Security\" />
+    <Folder Include="Interfaces\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+  </ItemGroup>
+
 </Project>
