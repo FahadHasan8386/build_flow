@@ -1,10 +1,13 @@
-﻿using System;
+﻿using BuildFlow.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Interfaces.Security
+namespace BuildFlow.Application.Interfaces.Security;
+
+public interface IJwtTokenService
 {
-    internal interface IJwtTokenService
-    {
-    }
+    string GenerateAccessToken(User user);
+
+    RefreshToken GenerateRefreshToken(Guid userId);
 }

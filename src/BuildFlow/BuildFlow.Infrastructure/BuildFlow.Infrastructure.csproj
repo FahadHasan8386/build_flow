@@ -11,4 +11,8 @@
     <ProjectReference Include="..\BuildFlow.Domain\BuildFlow.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
