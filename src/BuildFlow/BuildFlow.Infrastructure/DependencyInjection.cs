@@ -1,5 +1,7 @@
-﻿using BuildFlow.Application.Interfaces.Security;
+﻿using BuildFlow.Application.Interfaces.Repositories;
+using BuildFlow.Application.Interfaces.Security;
 using BuildFlow.Infrastructure.Persistence;
+using BuildFlow.Infrastructure.Repositories;
 using BuildFlow.Infrastructure.Security;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,6 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<DbConnectionFactory>();
+        services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         return services;
     }
