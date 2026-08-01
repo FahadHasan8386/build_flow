@@ -54,8 +54,7 @@ public class UserRepository : IUserRepository
     {
         using var connection = _connectionFactory.CreateConnection();
 
-        return await connection.ExecuteScalarAsync<int>(
-            "SELECT COUNT(1) FROM Users WHERE Email=@Email",
+        return await connection.ExecuteScalarAsync<int>("SELECT COUNT(1) FROM Users WHERE Email=@Email",
             new { Email = email }) > 0;
     }
 }
