@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Infrastructure.Persistense
+namespace BuildFlow.Infrastructure.Persistence;
+
+internal class Dapper
 {
-    internal class Dapper
-    {
-    }
 }

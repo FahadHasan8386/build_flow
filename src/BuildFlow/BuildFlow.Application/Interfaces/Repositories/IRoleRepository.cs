@@ -10,4 +10,6 @@ public interface IRoleRepository
     Task<Guid> CreateAsync(Role role);
 
     Task<Role?> GetByNameAsync(Guid tenantId, string roleName);
+
+    Task<bool> ExistsAsync(Guid tenantId, string roleName);
 }

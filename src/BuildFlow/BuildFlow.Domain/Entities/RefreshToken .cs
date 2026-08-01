@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BuildFlow.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BuildFlow.Domain.Entities;
 
-public class RefreshToken
+public class RefreshToken : BaseModel
 {
     public Guid UserId { get; set; }
 

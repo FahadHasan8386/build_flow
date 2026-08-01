@@ -57,9 +57,7 @@ public class TenantRepository : ITenantRepository
 
         string sql = "SELECT COUNT(1) FROM Tenants WHERE Slug=@Slug";
 
-        return await connection.ExecuteScalarAsync<int>(
-            sql,
-            new { Slug = slug }) > 0;
+        return await connection.ExecuteScalarAsync<int>(sql,new { Slug = slug }) > 0;
     }
 
 }
