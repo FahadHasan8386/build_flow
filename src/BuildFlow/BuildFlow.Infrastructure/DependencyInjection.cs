@@ -16,6 +16,10 @@ public static class DependencyInjection
     {
         services.AddScoped<DbConnectionFactory>();
         services.AddScoped<ITenantRepository, TenantRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         return services;
     }
