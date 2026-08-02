@@ -7,7 +7,7 @@ namespace BuildFlow.Application.Interfaces.Security;
 
 public interface IJwtTokenService
 {
-    string GenerateAccessToken(User user);
+    string GenerateAccessToken(User user , string role);
 
     RefreshToken GenerateRefreshToken(Guid userId);
 }
