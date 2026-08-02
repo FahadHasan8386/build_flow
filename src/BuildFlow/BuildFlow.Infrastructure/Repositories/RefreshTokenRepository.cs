@@ -4,6 +4,7 @@ using BuildFlow.Infrastructure.Persistence;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace BuildFlow.Infrastructure.Repositories;
@@ -17,9 +18,9 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task CreateAsync(RefreshToken refreshToken)
+    public async Task CreateAsync(RefreshToken refreshToken, IDbConnection connection,
+    IDbTransaction transaction)
     {
-        using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @"
                             INSERT INTO RefreshTokens
@@ -27,7 +28,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
                             VALUES
                             (@Id,@UserId,@Token,@ExpiresAt,@RevokedAt,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@InActive);";
 
-        await connection.ExecuteAsync(sql, refreshToken);
+        await connection.ExecuteAsync(sql, refreshToken , transaction);
     }
 
     public async Task<RefreshToken?> GetByTokenAsync(string token)

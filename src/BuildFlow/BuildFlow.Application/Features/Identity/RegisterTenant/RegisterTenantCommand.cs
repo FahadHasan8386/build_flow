@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Identity.RegisterTenant
-{
-    internal class RegisterTenantCommand
-    {
-    }
-}
+namespace BuildFlow.Application.Features.Identity.RegisterTenant;
+
+public record RegisterTenantCommand( RegisterTenantRequest Request) : IRequest<RegisterTenantResponse>;
+
