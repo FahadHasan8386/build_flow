@@ -1,13 +1,14 @@
-﻿using System;
+﻿using BuildFlow.Domain.Entities;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
-using BuildFlow.Domain.Entities;
 
 namespace BuildFlow.Application.Interfaces.Repositories;
 
 public interface IRefreshTokenRepository
 {
-    Task CreateAsync(RefreshToken refreshToken);
+    Task CreateAsync(RefreshToken refreshToken,IDbConnection connection,IDbTransaction transaction);
 
     Task<RefreshToken?> GetByTokenAsync(string token);
 
