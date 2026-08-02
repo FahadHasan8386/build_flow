@@ -4,6 +4,7 @@ using BuildFlow.Infrastructure.Persistence;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace BuildFlow.Infrastructure.Repositories;
@@ -17,16 +18,15 @@ public class RoleRepository : IRoleRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<Guid> CreateAsync(Role role)
+    public async Task<Guid> CreateAsync(Role role , IDbConnection connection,IDbTransaction transaction)
     {
-        using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @"INSERT INTO Roles
                             (Id,TenantId,Name,Description,IsSystemRole,CreatedBy,CreatedAt, ModifiedBy,ModifiedAt,InActive)
                             VALUES
                             ( @Id, @TenantId,@Name,@Description,@IsSystemRole,@CreatedBy,@CreatedAt, @ModifiedBy,@ModifiedAt,@InActive);";
 
-        await connection.ExecuteAsync(sql, role);
+        await connection.ExecuteAsync(sql, role , transaction);
 
         return role.Id;
     }

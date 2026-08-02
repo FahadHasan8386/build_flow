@@ -4,6 +4,7 @@ using BuildFlow.Infrastructure.Persistence;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace BuildFlow.Infrastructure.Repositories;
@@ -17,14 +18,13 @@ public class TenantRepository : ITenantRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<Guid> CreateAsync(Tenant tenant)
+    public async Task<Guid> CreateAsync(Tenant tenant , IDbConnection connection,IDbTransaction transaction)
     {
-        using var connection = _connectionFactory.CreateConnection();
 
         string sql = @"INSERT INTO Tenants(Id,Name,Slug,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt, InActive)
                        VALUES(@Id,@Name,@Slug,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@InActive);";
 
-        await connection.ExecuteAsync(sql, tenant);
+        await connection.ExecuteAsync(sql, tenant , transaction);
 
         return tenant.Id;
     }

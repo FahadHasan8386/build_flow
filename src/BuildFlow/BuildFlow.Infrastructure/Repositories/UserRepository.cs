@@ -4,7 +4,9 @@ using BuildFlow.Infrastructure.Persistence;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
+using System.Transactions;
 
 namespace BuildFlow.Infrastructure.Repositories;
 
@@ -17,9 +19,8 @@ public class UserRepository : IUserRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<Guid> CreateAsync(User user)
+    public async Task<Guid> CreateAsync(User user , IDbConnection connection,IDbTransaction transaction)
     {
-        using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @"INSERT INTO Users(Id,TenantId,FirstName,LastName,Email,PasswordHash,
                              IsActive,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,InActive)
@@ -27,7 +28,7 @@ public class UserRepository : IUserRepository
                         (@Id, @TenantId, @FirstName,@LastName, @Email,@PasswordHash, @IsActive,@CreatedBy,
                             @CreatedAt,@ModifiedBy, @ModifiedAt,@InActive);";
 
-        await connection.ExecuteAsync(sql, user);
+        await connection.ExecuteAsync(sql, user , transaction);
 
         return user.Id;
     }
