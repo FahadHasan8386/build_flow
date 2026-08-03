@@ -21,6 +21,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register-tenant")]
+    [AllowAnonymous]
     public async Task<IActionResult> RegisterTenant([FromBody] RegisterTenantRequest request)
     {
         var response = await _mediator.Send(new RegisterTenantCommand(request));
@@ -28,6 +29,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var response = await _mediator.Send(new LoginCommand(request));
@@ -35,7 +37,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh-token")]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
     {
         var response = await _mediator.Send(new RefreshTokenCommand(request));
