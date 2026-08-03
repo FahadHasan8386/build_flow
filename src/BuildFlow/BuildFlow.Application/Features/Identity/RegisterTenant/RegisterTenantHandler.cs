@@ -115,7 +115,7 @@ public class RegisterTenantHandler : IRequestHandler<RegisterTenantCommand, Regi
                 ModifiedBy = request.Request.Email,
                 ModifiedAt = DateTime.UtcNow,
                 IsDeleted = false
-            });
+            }, connection, transaction);
 
             var refreshToken = _jwtTokenService.GenerateRefreshToken(userId);
             await _refreshTokenRepository.CreateAsync(refreshToken, connection, transaction);

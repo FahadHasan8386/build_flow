@@ -15,16 +15,14 @@ public class UserRoleRepository : IUserRoleRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<Guid> CreateAsync(UserRole userRole)
+    public async Task<Guid> CreateAsync(UserRole userRole, IDbConnection connection, IDbTransaction transaction)
     {
-        using var connection = _connectionFactory.CreateConnection();
-
         const string sql = @"
             INSERT INTO UserRoles (Id, UserId, RoleId, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt, InActive)
             VALUES (@Id, @UserId, @RoleId, @CreatedBy, @CreatedAt, @ModifiedBy, @ModifiedAt, @IsDeleted);
         ";
 
-        await connection.ExecuteAsync(sql, userRole);
+        await connection.ExecuteAsync(sql, userRole, transaction);
         return userRole.Id;
     }
 }
