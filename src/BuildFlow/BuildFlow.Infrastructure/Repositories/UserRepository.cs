@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
                              IsActive,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,InActive)
                         VALUES
                         (@Id, @TenantId, @FirstName,@LastName, @Email,@PasswordHash, @IsActive,@CreatedBy,
-                            @CreatedAt,@ModifiedBy, @ModifiedAt,@InActive);";
+                            @CreatedAt,@ModifiedBy, @ModifiedAt,@IsDeleted);";
 
         await connection.ExecuteAsync(sql, user , transaction);
 

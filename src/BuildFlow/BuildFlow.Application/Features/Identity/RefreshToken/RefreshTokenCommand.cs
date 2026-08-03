@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MediatR;
 
-namespace BuildFlow.Application.Features.Identity.RefreshToken
-{
-    internal class RefreshTokenCommand
-    {
-    }
-}
+namespace BuildFlow.Application.Features.Identity.RefreshToken;
+
+public record RefreshTokenCommand(RefreshTokenRequest Request) : IRequest<RefreshTokenResponse>;

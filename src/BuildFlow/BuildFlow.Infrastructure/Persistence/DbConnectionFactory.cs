@@ -1,10 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using BuildFlow.Application.Interfaces.Persistence;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace BuildFlow.Infrastructure.Persistence;
 
-public class DbConnectionFactory
+public class DbConnectionFactory : IDbConnectionFactory
 {
     private readonly IConfiguration _configuration;
 

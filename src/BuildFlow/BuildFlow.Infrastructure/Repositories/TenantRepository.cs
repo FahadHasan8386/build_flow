@@ -22,7 +22,7 @@ public class TenantRepository : ITenantRepository
     {
 
         string sql = @"INSERT INTO Tenants(Id,Name,Slug,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt, InActive)
-                       VALUES(@Id,@Name,@Slug,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@InActive);";
+                       VALUES(@Id,@Name,@Slug,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@IsDeleted);";
 
         await connection.ExecuteAsync(sql, tenant , transaction);
 

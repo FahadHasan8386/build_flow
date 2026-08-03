@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace BuildFlow.Application.Features.Identity.RefreshToken;
 
-namespace BuildFlow.Application.Features.Identity.RefreshToken
+public class RefreshTokenRequest
 {
-    internal class RefreshTokenRequest
-    {
-    }
+    public string RefreshToken { get; set; } = string.Empty;
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace BuildFlow.Application.Features.Identity.Login;
 
-namespace BuildFlow.Application.Features.Identity.Login
+public class LoginRequest
 {
-    internal class LoginRequest
-    {
-    }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }

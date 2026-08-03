@@ -1,12 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BuildFlow.Application.Features.Identity.Login;
+using BuildFlow.Application.Features.Identity.RefreshToken;
+using BuildFlow.Application.Features.Identity.RegisterTenant;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace BuildFlow.api.Controllers
+namespace BuildFlow.api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : ControllerBase
 {
-    public class AuthController : Controller
+    private readonly IMediator _mediator;
+
+    public AuthController(IMediator mediator)
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        _mediator = mediator;
+    }
+
+    [HttpPost("register-tenant")]
+    public async Task<IActionResult> RegisterTenant([FromBody] RegisterTenantRequest request)
+    {
+        var response = await _mediator.Send(new RegisterTenantCommand(request));
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var response = await _mediator.Send(new LoginCommand(request));
+        return response.Success ? Ok(response) : Unauthorized(response);
+    }
+
+    [HttpPost("refresh-token")]
+    [Authorize]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+    {
+        var response = await _mediator.Send(new RefreshTokenCommand(request));
+        return response.Success ? Ok(response) : BadRequest(response);
     }
 }

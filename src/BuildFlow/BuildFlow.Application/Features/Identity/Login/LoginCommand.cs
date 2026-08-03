@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MediatR;
 
-namespace BuildFlow.Application.Features.Identity.Login
-{
-    internal class LoginCommand
-    {
-    }
-}
+namespace BuildFlow.Application.Features.Identity.Login;
+
+public record LoginCommand(LoginRequest Request) : IRequest<LoginResponse>;

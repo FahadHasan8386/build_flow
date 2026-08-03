@@ -26,7 +26,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
                             INSERT INTO RefreshTokens
                             (Id, UserId,Token, ExpiresAt, RevokedAt,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,InActive)
                             VALUES
-                            (@Id,@UserId,@Token,@ExpiresAt,@RevokedAt,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@InActive);";
+                            (@Id,@UserId,@Token,@ExpiresAt,@RevokedAt,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@IsDeleted);";
 
         await connection.ExecuteAsync(sql, refreshToken , transaction);
     }

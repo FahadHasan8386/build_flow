@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FluentValidation;
 
-namespace BuildFlow.Application.Features.Identity.Login
+namespace BuildFlow.Application.Features.Identity.Login;
+
+public class LoginValidator : AbstractValidator<LoginRequest>
 {
-    internal class LoginValidator
+    public LoginValidator()
     {
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Password).NotEmpty().MinimumLength(8);
     }
 }
