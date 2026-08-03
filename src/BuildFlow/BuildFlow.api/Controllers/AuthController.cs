@@ -1,4 +1,6 @@
 ﻿using BuildFlow.Application.Features.Identity.Login;
+using BuildFlow.Application.Features.Identity.Logout;
+using BuildFlow.Application.Features.Identity.Profile;
 using BuildFlow.Application.Features.Identity.RefreshToken;
 using BuildFlow.Application.Features.Identity.RegisterTenant;
 using MediatR;
@@ -38,5 +40,21 @@ public class AuthController : ControllerBase
     {
         var response = await _mediator.Send(new RefreshTokenCommand(request));
         return response.Success ? Ok(response) : BadRequest(response);
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+    {
+        var response = await _mediator.Send(new LogoutCommand(request));
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
+
+    [HttpGet("profile/{userId:guid}")]
+    [Authorize]
+    public async Task<IActionResult> GetProfile(Guid userId)
+    {
+        var response = await _mediator.Send(new GetProfileQuery(userId));
+        return Ok(response);
     }
 }
