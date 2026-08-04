@@ -18,15 +18,8 @@ public class RegisterTenantHandler : IRequestHandler<RegisterTenantCommand, Regi
     private readonly IUserRoleRepository _userRoleRepository;
     private readonly IDbConnectionFactory _connectionFactory;
 
-    public RegisterTenantHandler(
-        ITenantRepository tenantRepository,
-        IUserRepository userRepository,
-        IRoleRepository roleRepository,
-        IRefreshTokenRepository refreshTokenRepository,
-        IJwtTokenService jwtTokenService,
-        IPasswordHasher passwordHasher,
-        IUserRoleRepository userRoleRepository,
-        IDbConnectionFactory connectionFactory)
+    public RegisterTenantHandler(ITenantRepository tenantRepository,IUserRepository userRepository,IRoleRepository roleRepository,IRefreshTokenRepository refreshTokenRepository,
+                                IJwtTokenService jwtTokenService,IPasswordHasher passwordHasher, IUserRoleRepository userRoleRepository,IDbConnectionFactory connectionFactory)
     {
         _tenantRepository = tenantRepository;
         _userRepository = userRepository;
