@@ -1,0 +1,71 @@
+@page "/login"
+@inject BuildFlow.Web.Services.Auth.IAuthService Auth
+@inject NavigationManager Navigation
+
+<PageTitle>Login</PageTitle>
+
+<div class="row justify-content-center py-5">
+    <div class="col-lg-5 col-md-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-lg-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Welcome back</h2>
+                    <p class="text-muted">Sign in to continue managing your workspace.</p>
+                </div>
+
+                <EditForm Model="model" OnValidSubmit="HandleLogin" class="vstack gap-3">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div>
+                        <label class="form-label">Email address</label>
+                        <InputText @bind-Value="model.Email" class="form-control" type="email" placeholder="you@company.com" />
+                    </div>
+
+                    <div>
+                        <label class="form-label">Password</label>
+                        <InputText @bind-Value="model.Password" class="form-control" type="password" placeholder="Enter password" />
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        <div class="alert alert-danger">@error</div>
+                    }
+
+                    <button class="btn btn-primary w-100" type="submit">Sign in</button>
+                </EditForm>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted">New here?</span>
+                    <a href="/register" class="ms-1">Create an account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private BuildFlow.Web.Models.LoginRequest model = new();
+    private string error = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Auth.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        error = string.Empty;
+        var success = await Auth.LoginAsync(model);
+        if (success)
+        {
+            Navigation.NavigateTo("/dashboard");
+            return;
+        }
+
+        error = "We could not sign you in. Please verify your email and password.";
+    }
+}

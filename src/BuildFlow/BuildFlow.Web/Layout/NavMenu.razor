@@ -1,0 +1,50 @@
+@inject BuildFlow.Web.Services.Auth.IAuthService Auth
+@inject NavigationManager Navigation
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-3">
+    <a class="navbar-brand" href="/">BuildFlow</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+            </li>
+            @if (Auth.IsAuthenticated)
+            {
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/dashboard">Dashboard</NavLink>
+                </li>
+            }
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+            @if (Auth.IsAuthenticated)
+            {
+                <span class="navbar-text text-light">@Auth.UserEmail</span>
+                <button class="btn btn-outline-light btn-sm" @onclick="HandleLogout">Logout</button>
+            }
+            else
+            {
+                <a class="btn btn-outline-light btn-sm" href="/login">Login</a>
+                <a class="btn btn-primary btn-sm" href="/register">Register</a>
+            }
+        </div>
+    </div>
+</nav>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Auth.InitializeAsync();
+        Auth.AuthChanged += StateHasChanged;
+    }
+
+    private async Task HandleLogout()
+    {
+        await Auth.LogoutAsync();
+        Navigation.NavigateTo("/");
+    }
+}

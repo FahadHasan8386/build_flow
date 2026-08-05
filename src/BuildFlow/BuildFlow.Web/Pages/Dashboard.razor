@@ -1,0 +1,51 @@
+@page "/dashboard"
+@inject BuildFlow.Web.Services.Auth.IAuthService Auth
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Welcome back</h1>
+            <p class="text-muted mb-0">Your BuildFlow workspace is ready for delivery planning.</p>
+        </div>
+        <button class="btn btn-outline-danger" @onclick="HandleLogout">Sign out</button>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Today’s focus</h5>
+                    <p class="card-text text-muted">Review releases, assign delivery tasks, and keep your team aligned.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Access status</h5>
+                    <p class="card-text text-muted">You’re signed in securely with a JWT-based session.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Auth.InitializeAsync();
+        if (!Auth.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private async Task HandleLogout()
+    {
+        await Auth.LogoutAsync();
+        Navigation.NavigateTo("/");
+    }
+}
