@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Projects.CreateProject
+namespace BuildFlow.Application.Features.Projects.CreateProject;
+
+public class CreateProjectRequest
 {
-    internal class CreateProjectRequest
-    {
-    }
+    public string Name { get; set; } = string.Empty;
+
+    public string Description { get; set; } = string.Empty;
+
+    public DateTime? StartDate { get; set; }
+
+    public DateTime? EndDate { get; set; }
 }
