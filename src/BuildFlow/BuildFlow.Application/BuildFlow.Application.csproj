@@ -12,6 +12,10 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
+    <Folder Include="Features\Projects\DeleteProject\" />
+    <Folder Include="Features\Projects\GetProjectById\" />
+    <Folder Include="Features\Projects\GetProjects\" />
+    <Folder Include="Features\Projects\UpdateProject\" />
     <Folder Include="Interfaces\Services\" />
   </ItemGroup>
 
