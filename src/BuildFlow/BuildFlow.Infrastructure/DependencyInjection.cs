@@ -15,6 +15,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
         services.AddScoped<ITenantRepository, TenantRepository>();
@@ -28,6 +30,8 @@ public static class DependencyInjection
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
     }
