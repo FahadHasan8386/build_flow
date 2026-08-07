@@ -1,0 +1,88 @@
+﻿using BuildFlow.Application.Interfaces.Repositories;
+using BuildFlow.Domain.Entities;
+using BuildFlow.Infrastructure.Persistence;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using Dapper;
+
+namespace BuildFlow.Infrastructure.Repositories;
+
+public class ProjectRepository : IProjectRepository
+{
+    private readonly DbConnectionFactory _connectionFactory;
+
+    public ProjectRepository(DbConnectionFactory connectionFactory)
+    {
+        _connectionFactory = connectionFactory;
+    }
+
+    public async Task<Guid> CreateAsync(Project project,IDbConnection connection,IDbTransaction transaction)
+    {
+        const string sql = @"INSERT INTO Projects(
+                Id,TenantId,Name,Description,StartDate, EndDate,IsArchived,CreatedByUserId, CreatedAt,CreatedBy,IsDeleted
+                )VALUES(@Id,@TenantId,@Name,@Description,@StartDate,@EndDate,@IsArchived, @CreatedByUserId,
+                @CreatedAt,@CreatedBy,@IsDeleted);";
+
+        await connection.ExecuteAsync( sql,project,transaction);
+
+        return project.Id;
+    }
+    public async Task<Project?> GetByIdAsync(Guid id)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @"SELECT * FROM Projects
+                            WHERE Id = @Id
+                              AND IsDeleted = 0";
+
+        return await connection.QueryFirstOrDefaultAsync<Project>(
+            sql,
+            new { Id = id });
+    }
+
+    public async Task<IEnumerable<Project>> GetByTenantAsync(Guid tenantId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @" SELECT * FROM Projects
+                            WHERE TenantId = @TenantId
+                              AND IsDeleted = 0
+                            ORDER BY CreatedAt DESC";
+
+        return await connection.QueryAsync<Project>(sql,new { TenantId = tenantId });
+    }
+
+    public async Task UpdateAsync(Project project)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @"UPDATE Projects SET
+                            Name = @Name,
+                            Description = @Description,
+                            StartDate = @StartDate,
+                            EndDate = @EndDate,
+                            IsArchived = @IsArchived,
+                            ModifiedAt = @ModifiedAt,
+                            ModifiedBy = @ModifiedBy
+                        WHERE Id = @Id
+                          AND TenantId = @TenantId
+                          AND IsDeleted = 0
+                        ";
+
+        await connection.ExecuteAsync(sql, project);
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @"UPDATE Projects
+                            SET IsDeleted = 1
+                            WHERE Id = @Id
+                            ";
+
+        await connection.ExecuteAsync(sql,new { Id = id });
+    }
+}
