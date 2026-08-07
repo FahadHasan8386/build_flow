@@ -23,14 +23,32 @@ public class JwtTokenService : IJwtTokenService
     public string GenerateAccessToken(User user, string role)
     {
         var claims = new List<Claim>
-    {
-        new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        new(JwtRegisteredClaimNames.Email, user.Email),
-        new("TenantId", user.TenantId.ToString()),
-        new(ClaimTypes.Role, role),
-        new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
-    };
+        {
+            new(
+                ClaimTypes.NameIdentifier,
+                user.Id.ToString()
+            ),
 
+            new(
+                ClaimTypes.Email,
+                user.Email
+            ),
+
+            new(
+                "TenantId",
+                user.TenantId.ToString()
+            ),
+
+            new(
+                ClaimTypes.Role,
+                role
+            ),
+
+            new(
+                ClaimTypes.Name,
+                $"{user.FirstName} {user.LastName}"
+            )
+        };
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 
