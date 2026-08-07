@@ -16,14 +16,19 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-        services.AddScoped<DbConnectionFactory>();
+
         services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
+
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+        services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
         return services;
     }
 }
