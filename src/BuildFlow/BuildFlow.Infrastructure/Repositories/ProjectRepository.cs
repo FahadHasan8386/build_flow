@@ -18,14 +18,15 @@ public class ProjectRepository : IProjectRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<Guid> CreateAsync(Project project,IDbConnection connection,IDbTransaction transaction)
+    public async Task<Guid> CreateAsync(Project project)
     {
+        using var connection = _connectionFactory.CreateConnection();
         const string sql = @"INSERT INTO Projects(
                 Id,TenantId,Name,Description,StartDate, EndDate,IsArchived,CreatedByUserId, CreatedAt,CreatedBy,IsDeleted
                 )VALUES(@Id,@TenantId,@Name,@Description,@StartDate,@EndDate,@IsArchived, @CreatedByUserId,
                 @CreatedAt,@CreatedBy,@IsDeleted);";
 
-        await connection.ExecuteAsync( sql,project,transaction);
+        await connection.ExecuteAsync( sql,project);
 
         return project.Id;
     }
@@ -35,11 +36,11 @@ public class ProjectRepository : IProjectRepository
 
         const string sql = @"SELECT * FROM Projects
                             WHERE Id = @Id
+                              AND TenantId = @TenantId
                               AND IsDeleted = 0";
 
-        return await connection.QueryFirstOrDefaultAsync<Project>(
-            sql,
-            new { Id = id });
+        return await connection.QueryFirstOrDefaultAsync<Project>(sql,
+            new { Id = id , TenanatId = tenantId});
     }
 
     public async Task<IEnumerable<Project>> GetByTenantAsync(Guid tenantId)
@@ -71,7 +72,19 @@ public class ProjectRepository : IProjectRepository
                           AND IsDeleted = 0
                         ";
 
-        await connection.ExecuteAsync(sql, project);
+        await connection.ExecuteAsync(sql,
+                        new
+                        {
+                            project.Id,
+                            project.TenantId,
+                            project.Name,
+                            project.Description,
+                            project.StartDate,
+                            project.EndDate,
+                            project.IsArchived,
+                            project.ModifiedAt,
+                            project.ModifiedBy
+                        });
     }
 
     public async Task DeleteAsync(Guid id, Guid tenantId)
@@ -81,8 +94,9 @@ public class ProjectRepository : IProjectRepository
         const string sql = @"UPDATE Projects
                             SET IsDeleted = 1
                             WHERE Id = @Id
-                            ";
+                            AND TenantId = @TenantId
+                            AND IsDeleted = 0";
 
-        await connection.ExecuteAsync(sql,new { Id = id });
+        await connection.ExecuteAsync(sql,new { Id = id , TenantId = tenantId });
     }
 }
