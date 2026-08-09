@@ -29,7 +29,7 @@ public class ProjectRepository : IProjectRepository
 
         return project.Id;
     }
-    public async Task<Project?> GetByIdAsync(Guid id)
+    public async Task<Project?> GetByIdAsync(Guid id, Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
@@ -54,7 +54,7 @@ public class ProjectRepository : IProjectRepository
         return await connection.QueryAsync<Project>(sql,new { TenantId = tenantId });
     }
 
-    public async Task UpdateAsync(Project project)
+    public async Task UpdateAsync(Project project, Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
@@ -74,7 +74,7 @@ public class ProjectRepository : IProjectRepository
         await connection.ExecuteAsync(sql, project);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
