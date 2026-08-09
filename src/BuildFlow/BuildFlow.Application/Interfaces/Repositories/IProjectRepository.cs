@@ -9,8 +9,8 @@ namespace BuildFlow.Application.Interfaces.Repositories;
 public interface IProjectRepository
 {
     Task<Guid> CreateAsync(Project project, IDbConnection connection , IDbTransaction transaction );
-    Task<Project?> GetByIdAsync(Guid id);
+    Task<Project?> GetByIdAsync(Guid id , Guid tenantId);
     Task<IEnumerable<Project>> GetByTenantAsync(Guid tenantId);
-    Task UpdateAsync(Project project);
-    Task DeleteAsync(Guid id);
+    Task UpdateAsync(Project project , Guid tenantId);
+    Task DeleteAsync(Guid id , Guid tenantId);
 }
