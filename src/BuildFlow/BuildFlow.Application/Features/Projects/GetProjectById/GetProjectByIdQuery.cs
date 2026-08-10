@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Projects.GetProjectById
-{
-    internal class GetProjectByIdQuery
-    {
-    }
-}
+namespace BuildFlow.Application.Features.Projects.GetProjectById;
+
+public record GetProjectByIdQuery(Guid ProjectId) : IRequest<GetProjectByIdResponse>;
+
