@@ -40,7 +40,7 @@ public class ProjectRepository : IProjectRepository
                               AND IsDeleted = 0";
 
         return await connection.QueryFirstOrDefaultAsync<Project>(sql,
-            new { Id = id , TenanatId = tenantId});
+            new { Id = id , TenantId = tenantId});
     }
 
     public async Task<IEnumerable<Project>> GetByTenantAsync(Guid tenantId)

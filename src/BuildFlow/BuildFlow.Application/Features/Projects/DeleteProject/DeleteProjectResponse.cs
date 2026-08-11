@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Projects.DeleteProject
+namespace BuildFlow.Application.Features.Projects.DeleteProject;
+
+public class DeleteProjectResponse
 {
-    internal class DeleteProjectResponse
-    {
-    }
+    public bool Success { get; set; }
+
+    public string Message { get; set; } = string.Empty;
 }

@@ -5,4 +5,4 @@ using System.Text;
 
 namespace BuildFlow.Application.Features.Projects.DeleteProject;
 
-public class DeleteProjectCommand (Guid ProjectId) : IRequest<DeleteProjectResponse>;
+public record DeleteProjectCommand (Guid ProjectId) : IRequest<DeleteProjectResponse>;
