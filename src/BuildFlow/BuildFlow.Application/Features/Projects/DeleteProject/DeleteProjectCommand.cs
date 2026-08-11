@@ -1,10 +1,8 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Projects.DeleteProject
-{
-    internal class DeleteProjectCommand
-    {
-    }
-}
+namespace BuildFlow.Application.Features.Projects.DeleteProject;
+
+public class DeleteProjectCommand (Guid ProjectId) : IRequest<DeleteProjectResponse>;

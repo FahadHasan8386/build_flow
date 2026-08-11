@@ -1,10 +1,17 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Projects.DeleteProject
+namespace BuildFlow.Application.Features.Projects.DeleteProject;
+
+public class DeleteProjectValidator
+: AbstractValidator<DeleteProjectCommand>
 {
-    internal class DeleteProjectValidator
+    public DeleteProjectValidator()
     {
+        RuleFor(x => x.ProjectId)
+            .NotEmpty()
+            .WithMessage("Project ID is required.");
     }
 }
