@@ -1,4 +1,5 @@
-﻿using BuildFlow.Application.Interfaces.Repositories;
+﻿using BuildFlow.Application.Interfaces.Persistence;
+using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Domain.Entities;
 using BuildFlow.Infrastructure.Persistence;
 using Dapper;
@@ -12,9 +13,9 @@ namespace BuildFlow.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly DbConnectionFactory _connectionFactory;
+    private readonly IDbConnectionFactory _connectionFactory;
 
-    public UserRepository(DbConnectionFactory connectionFactory)
+    public UserRepository(IDbConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }

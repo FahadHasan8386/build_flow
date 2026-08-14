@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using Dapper;
+using BuildFlow.Application.Interfaces.Persistence;
 
 namespace BuildFlow.Infrastructure.Repositories;
 
 public class ProjectRepository : IProjectRepository
 {
-    private readonly DbConnectionFactory _connectionFactory;
+    private readonly IDbConnectionFactory _connectionFactory;
 
-    public ProjectRepository(DbConnectionFactory connectionFactory)
+    public ProjectRepository(IDbConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }

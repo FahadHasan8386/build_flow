@@ -1,3 +1,4 @@
+using BuildFlow.Application.Interfaces.Persistence;
 using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Domain.Entities;
 using BuildFlow.Infrastructure.Persistence;
@@ -8,9 +9,9 @@ namespace BuildFlow.Infrastructure.Repositories;
 
 public class UserRoleRepository : IUserRoleRepository
 {
-    private readonly DbConnectionFactory _connectionFactory;
+    private readonly IDbConnectionFactory _connectionFactory;
 
-    public UserRoleRepository(DbConnectionFactory connectionFactory)
+    public UserRoleRepository(IDbConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }

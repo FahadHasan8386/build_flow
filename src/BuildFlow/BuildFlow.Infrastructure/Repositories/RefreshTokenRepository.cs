@@ -1,4 +1,5 @@
-﻿using BuildFlow.Application.Interfaces.Repositories;
+﻿using BuildFlow.Application.Interfaces.Persistence;
+using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Domain.Entities;
 using BuildFlow.Infrastructure.Persistence;
 using Dapper;
@@ -11,9 +12,9 @@ namespace BuildFlow.Infrastructure.Repositories;
 
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
-    private readonly DbConnectionFactory _connectionFactory;
+    private readonly IDbConnectionFactory _connectionFactory;
 
-    public RefreshTokenRepository(DbConnectionFactory connectionFactory)
+    public RefreshTokenRepository(IDbConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }
