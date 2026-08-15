@@ -1,6 +1,7 @@
 ﻿using BuildFlow.Application.Interfaces.Persistence;
 using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Application.Interfaces.Security;
+using BuildFlow.Domain.Entities;
 using BuildFlow.Infrastructure.Persistence;
 using BuildFlow.Infrastructure.Repositories;
 using BuildFlow.Infrastructure.Security;
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
