@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BuildFlow.Domain.Enums;
 
-public enum ProjectMemberRole
+public enum ProjectMemberRoleType
 {
     ProjectManager = 1,
     Engineer = 2, 

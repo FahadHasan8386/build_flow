@@ -14,5 +14,4 @@ public class ProjectMember : BaseModel
 
     public Guid TenantId { get; set; }
 
-    public ProjectMemberRole Role { get; set; } 
 }
