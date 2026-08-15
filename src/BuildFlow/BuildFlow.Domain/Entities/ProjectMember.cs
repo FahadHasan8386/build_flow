@@ -12,7 +12,7 @@ public class ProjectMember : BaseModel
 
     public Guid UserId { get; set; }
 
-    public ProjectMemberRole Role { get; set; }
+    public Guid TenantId { get; set; }
 
-    public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
+    public ProjectMemberRole Role { get; set; } 
 }
