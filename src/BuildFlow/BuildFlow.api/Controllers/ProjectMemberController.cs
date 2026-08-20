@@ -1,0 +1,36 @@
+﻿using BuildFlow.Application.Features.ProjectMembers.AddProjectMember;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BuildFlow.api.Controllers;
+
+[ApiController]
+[Route("api/project-members")]
+[Authorize]
+public class ProjectMemberController : ControllerBase
+{
+    private readonly IMediator _mediator;
+
+    public ProjectMemberController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddMember(
+        [FromBody] AddProjectMemberRequest request)
+    {
+        var command = new AddProjectMemberCommand(request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+}
