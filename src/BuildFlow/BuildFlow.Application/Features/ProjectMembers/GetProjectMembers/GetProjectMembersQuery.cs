@@ -5,4 +5,6 @@ using System.Text;
 
 namespace BuildFlow.Application.Features.ProjectMembers.GetProjectMembers;
 
-public class GetProjectMemberQuery(Guid ProjectId,Guid UserId) : IRequest<GetProjectMemberResponse>;
+public record GetProjectMembersQuery(
+    Guid ProjectId
+) : IRequest<GetProjectMembersResponse>;
