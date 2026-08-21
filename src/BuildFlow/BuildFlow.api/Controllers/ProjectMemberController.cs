@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.ProjectMembers.AddProjectMember;
+using BuildFlow.Application.Features.ProjectMembers.GetProjectMember;
 using BuildFlow.Application.Features.ProjectMembers.GetProjectMembers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +46,23 @@ public class ProjectMemberController : ControllerBase
         if (!result.Success)
         {
             return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("project/{projectId}/user/{userId}")]
+    public async Task<IActionResult> GetProjectMember(Guid projectId,Guid userId)
+    {
+        var query = new GetProjectMemberQuery(
+            projectId,
+            userId);
+
+        var result = await _mediator.Send(query);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
         }
 
         return Ok(result);
