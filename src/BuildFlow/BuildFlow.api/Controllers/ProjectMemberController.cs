@@ -54,9 +54,7 @@ public class ProjectMemberController : ControllerBase
     [HttpGet("project/{projectId}/user/{userId}")]
     public async Task<IActionResult> GetProjectMember(Guid projectId,Guid userId)
     {
-        var query = new GetProjectMemberQuery(
-            projectId,
-            userId);
+        var query = new GetProjectMemberQuery(projectId, userId);
 
         var result = await _mediator.Send(query);
 
