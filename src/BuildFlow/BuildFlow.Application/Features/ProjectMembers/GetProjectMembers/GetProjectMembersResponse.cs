@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.ProjectMembers.GetProjectMember;
+namespace BuildFlow.Application.Features.ProjectMembers.GetProjectMembers;
 
 public class GetProjectMemberResponse
 {
