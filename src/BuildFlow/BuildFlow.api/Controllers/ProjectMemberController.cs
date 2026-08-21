@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.ProjectMembers.AddProjectMember;
+using BuildFlow.Application.Features.ProjectMembers.AddProjectMemberRole;
 using BuildFlow.Application.Features.ProjectMembers.GetProjectMember;
 using BuildFlow.Application.Features.ProjectMembers.GetProjectMembers;
 using MediatR;
@@ -61,6 +62,25 @@ public class ProjectMemberController : ControllerBase
         if (!result.Success)
         {
             return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("project/{projectId}/user/{userId}/roles")]
+    public async Task<IActionResult> AddRole(Guid projectId,Guid userId,
+    [FromBody] AddProjectMemberRoleRequest request)
+    {
+        var command = new AddProjectMemberRoleCommand(
+            projectId,
+            userId,
+            request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
         }
 
         return Ok(result);
