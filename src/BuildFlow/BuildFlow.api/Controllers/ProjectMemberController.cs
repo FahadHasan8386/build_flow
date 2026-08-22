@@ -2,6 +2,7 @@
 using BuildFlow.Application.Features.ProjectMembers.AddProjectMemberRole;
 using BuildFlow.Application.Features.ProjectMembers.GetProjectMember;
 using BuildFlow.Application.Features.ProjectMembers.GetProjectMembers;
+using BuildFlow.Application.Features.ProjectMembers.RemoveProjectMember;
 using BuildFlow.Application.Features.ProjectMembers.RemoveProjectMemberRole;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -95,6 +96,25 @@ public class ProjectMemberController : ControllerBase
             projectId,
             userId,
             request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpDelete("project/{projectId}/user/{userId}")]
+    public async Task<IActionResult> RemoveMember(
+    Guid projectId,
+    Guid userId)
+    {
+        var command = new RemoveProjectMemberCommand(
+            projectId,
+            userId);
 
         var result = await _mediator.Send(command);
 
