@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="BuildFlow.api/BuildFlow.api.csproj" />
+  <Project Path="BuildFlow.Shared/BuildFlow.Shared.csproj" Id="c1887c9e-7feb-4f1a-ac89-f658d6d60241" />
   <Project Path="BuildFlow.Web/BuildFlow.Web.csproj" />
   <Project Path="BuildFlow.Application/BuildFlow.Application.csproj" Id="e61e26d2-08e0-4516-aa4d-121b8159c0f5" />
   <Project Path="BuildFlow.Domain/BuildFlow.Domain.csproj" Id="c65ab95a-8aa8-4604-b8f5-36969423f728" />
