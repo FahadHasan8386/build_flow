@@ -1,12 +1,10 @@
-﻿using System;
+﻿using BuildFlow.Shared.Responses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BuildFlow.Application.Features.ProjectMembers.AddProjectMemberRole;
 
-public class AddProjectMemberRoleResponse
+public class AddProjectMemberRoleResponse : ApiResponse
 {
-    public bool Success { get; set; }
-
-    public string Message { get; set; } = string.Empty;
 }
