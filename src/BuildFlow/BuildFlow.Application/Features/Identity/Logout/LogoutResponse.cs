@@ -1,7 +1,7 @@
+using BuildFlow.Shared.Responses;
+
 namespace BuildFlow.Application.Features.Identity.Logout;
 
-public class LogoutResponse
+public class LogoutResponse : ApiResponse
 {
-    public bool Success { get; set; }
-    public string Message { get; set; } = string.Empty;
 }
