@@ -18,8 +18,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(
-        [FromBody] CreateTaskRequest request)
+    public async Task<IActionResult> Create([FromBody] CreateTaskRequest request)
     {
         var command = new CreateTaskCommand(request);
 
