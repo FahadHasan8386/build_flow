@@ -1,6 +1,7 @@
 ﻿using BuildFlow.Application.Features.Tasks.CreateTask;
 using BuildFlow.Application.Features.Tasks.GetTaskById;
 using BuildFlow.Application.Features.Tasks.GetTasks;
+using BuildFlow.Application.Features.Tasks.UpdateTask;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,23 @@ public class TaskController : ControllerBase
         var query = new GetTaskByIdQuery(taskId);
 
         var result = await _mediator.Send(query);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPut("{taskId}")]
+    public async Task<IActionResult> UpdateTask(Guid taskId,[FromBody] UpdateTaskRequest request)
+    {
+        var command = new UpdateTaskCommand(
+            taskId,
+            request);
+
+        var result = await _mediator.Send(command);
 
         if (!result.Success)
         {
