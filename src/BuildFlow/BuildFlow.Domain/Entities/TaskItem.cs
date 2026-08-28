@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Domain.Common;
+using BuildFlow.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +16,7 @@ public class TaskItem : BaseModel
 
     public string Description { get; set; } = string.Empty;
 
-    public TaskStatus Status { get; set; } = TaskStatus.Todo;
+    public Enums.TaskStatus Status { get; set; } = Enums.TaskStatus.Todo;
 
     public TaskPriority Priority { get; set; } = TaskPriority.Medium;
 
