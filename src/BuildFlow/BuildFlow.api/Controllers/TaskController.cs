@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.Tasks.CreateTask;
+using BuildFlow.Application.Features.Tasks.GetTaskById;
 using BuildFlow.Application.Features.Tasks.GetTasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,21 @@ public class TaskController : ControllerBase
     public async Task<IActionResult> GetTasks(Guid projectId)
     {
         var query = new GetTasksQuery(projectId);
+
+        var result = await _mediator.Send(query);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("{taskId}")]
+    public async Task<IActionResult> GetTaskById(Guid taskId)
+    {
+        var query = new GetTaskByIdQuery(taskId);
 
         var result = await _mediator.Send(query);
 
