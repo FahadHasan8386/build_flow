@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BuildFlow.Domain.Entities;
+using BuildFlow.Shared.Responses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Tasks.AssignTask
+namespace BuildFlow.Application.Features.Tasks.AssignTask;
+
+public class AssignTaskResponse : ApiResponse   
 {
-    internal class AssignTaskResponse
-    {
-    }
+    public TaskItem? Task { get; set; }
 }
