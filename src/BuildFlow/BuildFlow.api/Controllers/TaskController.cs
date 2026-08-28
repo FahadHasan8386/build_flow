@@ -1,4 +1,5 @@
-﻿using BuildFlow.Application.Features.Tasks.CreateTask;
+﻿using BuildFlow.Application.Features.Tasks.AssignTask;
+using BuildFlow.Application.Features.Tasks.CreateTask;
 using BuildFlow.Application.Features.Tasks.GetTaskById;
 using BuildFlow.Application.Features.Tasks.GetTasks;
 using BuildFlow.Application.Features.Tasks.UpdateTask;
@@ -81,4 +82,24 @@ public class TaskController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("{taskId}/assign")]
+    public async Task<IActionResult> AssignTask(
+    Guid taskId,
+    [FromBody] AssignTaskRequest request)
+    {
+        var command = new AssignTaskCommand(
+            taskId,
+            request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
 }
