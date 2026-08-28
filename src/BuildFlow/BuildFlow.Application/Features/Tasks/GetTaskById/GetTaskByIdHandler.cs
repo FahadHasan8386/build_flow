@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BuildFlow.Application.Features.Tasks.GetTaskById
 {
-    internal class GetTaskByIdHandler
+    public class GetTaskByIdHandler : IRequestHandler<GetTaskByIdQuery, GetTaskByIdResponse>
     {
     }
 }
