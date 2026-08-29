@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.Tasks.AssignTask;
+using BuildFlow.Application.Features.Tasks.ChangeTaskStatus;
 using BuildFlow.Application.Features.Tasks.CreateTask;
 using BuildFlow.Application.Features.Tasks.GetTaskById;
 using BuildFlow.Application.Features.Tasks.GetTasks;
@@ -97,6 +98,25 @@ public class TaskController : ControllerBase
         if (!result.Success)
         {
             return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPut("{taskId}/status")]
+    public async Task<IActionResult> ChangeStatus(
+    Guid taskId,
+    [FromBody] ChangeTaskStatusRequest request)
+    {
+        var command = new ChangeTaskStatusCommand(
+            taskId,
+            request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
         }
 
         return Ok(result);
