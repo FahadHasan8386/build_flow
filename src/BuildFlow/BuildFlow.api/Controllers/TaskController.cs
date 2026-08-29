@@ -1,6 +1,7 @@
 ﻿using BuildFlow.Application.Features.Tasks.AssignTask;
 using BuildFlow.Application.Features.Tasks.ChangeTaskStatus;
 using BuildFlow.Application.Features.Tasks.CreateTask;
+using BuildFlow.Application.Features.Tasks.DeleteTask;
 using BuildFlow.Application.Features.Tasks.GetTaskById;
 using BuildFlow.Application.Features.Tasks.GetTasks;
 using BuildFlow.Application.Features.Tasks.UpdateTask;
@@ -111,6 +112,21 @@ public class TaskController : ControllerBase
         var command = new ChangeTaskStatusCommand(
             taskId,
             request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{taskId}")]
+    public async Task<IActionResult> DeleteTask(Guid taskId)
+    {
+        var command = new DeleteTaskCommand(taskId);
 
         var result = await _mediator.Send(command);
 
