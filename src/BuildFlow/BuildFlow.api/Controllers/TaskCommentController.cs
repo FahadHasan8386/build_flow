@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.TaskComments.AddComments;
+using BuildFlow.Application.Features.TaskComments.GetCommentById;
 using BuildFlow.Application.Features.TaskComments.GetComments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,21 @@ public class TaskCommentController : ControllerBase
     public async Task<IActionResult> GetComments(Guid taskId)
     {
         var query = new GetCommentsQuery(taskId);
+
+        var result = await _mediator.Send(query);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("{commentId}")]
+    public async Task<IActionResult> GetCommentById(Guid commentId)
+    {
+        var query = new GetCommentByIdQuery(commentId);
 
         var result = await _mediator.Send(query);
 
