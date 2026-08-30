@@ -1,6 +1,7 @@
 ﻿using BuildFlow.Application.Features.TaskComments.AddComments;
 using BuildFlow.Application.Features.TaskComments.GetCommentById;
 using BuildFlow.Application.Features.TaskComments.GetComments;
+using BuildFlow.Application.Features.TaskComments.UpdateComment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,25 @@ public class TaskCommentController : ControllerBase
         if (!result.Success)
         {
             return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPut("{commentId}")]
+    public async Task<IActionResult> UpdateComment(
+    Guid commentId,
+    [FromBody] UpdateCommentRequest request)
+    {
+        var command = new UpdateCommentCommand(
+            commentId,
+            request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
         }
 
         return Ok(result);
