@@ -1,10 +1,8 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.TaskComments.AddComments
-{
-    internal class AddCommentCommand
-    {
-    }
-}
+namespace BuildFlow.Application.Features.TaskComments.AddComments;
+
+public record AddCommentCommand(AddCommentRequest Request) : IRequest<AddCommentResponse>;
