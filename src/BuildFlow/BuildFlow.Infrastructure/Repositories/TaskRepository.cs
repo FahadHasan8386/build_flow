@@ -43,7 +43,7 @@ public class TaskRepository : ITaskRepository
     {
         using var connection = _connectionFactory.CreateConnection();
 
-        const string sql = @"SELECTId,TenantId, ProjectId,Title,Description,Status,Priority,AssignedToUserId,DueDate,
+        const string sql = @"SELECT Id,TenantId, ProjectId,Title,Description,Status,Priority,AssignedToUserId,DueDate,
                     CreatedAt,CreatedBy,ModifiedAt,ModifiedBy,IsDeleted
                     FROM Tasks
                     WHERE ProjectId = @ProjectId
