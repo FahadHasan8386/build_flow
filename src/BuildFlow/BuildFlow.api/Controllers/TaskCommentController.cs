@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.TaskComments.AddComments;
+using BuildFlow.Application.Features.TaskComments.DeleteComment;
 using BuildFlow.Application.Features.TaskComments.GetCommentById;
 using BuildFlow.Application.Features.TaskComments.GetComments;
 using BuildFlow.Application.Features.TaskComments.UpdateComment;
@@ -74,6 +75,21 @@ public class TaskCommentController : ControllerBase
         var command = new UpdateCommentCommand(
             commentId,
             request);
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{commentId}")]
+    public async Task<IActionResult> DeleteComment(Guid commentId)
+    {
+        var command = new DeleteCommentCommand(commentId);
 
         var result = await _mediator.Send(command);
 
