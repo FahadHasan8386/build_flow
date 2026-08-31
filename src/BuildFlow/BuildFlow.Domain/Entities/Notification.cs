@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Domain.Common;
+using BuildFlow.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
