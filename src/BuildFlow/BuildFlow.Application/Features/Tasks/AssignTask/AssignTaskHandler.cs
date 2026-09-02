@@ -1,27 +1,29 @@
 ﻿using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Application.Interfaces.Security;
+using BuildFlow.Application.Interfaces.Services;
+using BuildFlow.Domain.Enums;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BuildFlow.Application.Features.Tasks.AssignTask;
 
 public class AssignTaskHandler
-: IRequestHandler<AssignTaskCommand, AssignTaskResponse>
+    : IRequestHandler<AssignTaskCommand, AssignTaskResponse>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IProjectMemberRepository _projectMemberRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly INotificationService _notificationService;
 
     public AssignTaskHandler(
         ITaskRepository taskRepository,
         IProjectMemberRepository projectMemberRepository,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        INotificationService notificationService)
     {
         _taskRepository = taskRepository;
         _projectMemberRepository = projectMemberRepository;
         _currentUserService = currentUserService;
+        _notificationService = notificationService;
     }
 
     public async Task<AssignTaskResponse> Handle(
@@ -67,6 +69,17 @@ public class AssignTaskHandler
         task.ModifiedBy = currentUserId.ToString();
 
         await _taskRepository.UpdateAsync(task);
+
+        // Create notification
+        await _notificationService.CreateAsync(
+            tenantId,
+            request.Request.UserId,
+            NotificationType.TaskAssigned,
+            "New Task Assigned",
+            $"You have been assigned task: {task.Title}",
+            task.Id,
+            "Task",
+            currentUserId);
 
         return new AssignTaskResponse
         {

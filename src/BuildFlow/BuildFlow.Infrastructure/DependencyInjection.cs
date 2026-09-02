@@ -1,6 +1,8 @@
 ﻿using BuildFlow.Application.Interfaces.Persistence;
 using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Application.Interfaces.Security;
+using BuildFlow.Application.Interfaces.Services;
+using BuildFlow.Application.Services;
 using BuildFlow.Domain.Entities;
 using BuildFlow.Infrastructure.Persistence;
 using BuildFlow.Infrastructure.Repositories;
@@ -32,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<ITaskCommentRepository, TaskCommentRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<INotificationService,NotificationService>();
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
