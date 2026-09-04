@@ -1,10 +1,10 @@
-﻿using System;
+﻿using BuildFlow.Shared.Responses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Notifications.MarkAllAsRead
+namespace BuildFlow.Application.Features.Notifications.MarkAllAsRead;
+
+public class MarkAllNotificationsAsReadResponse : ApiResponse
 {
-    internal class MarkAllNotificationsAsReadResponse
-    {
-    }
 }
