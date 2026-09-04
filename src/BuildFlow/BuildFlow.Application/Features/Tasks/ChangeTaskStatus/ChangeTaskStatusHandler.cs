@@ -1,23 +1,26 @@
 ﻿using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Application.Interfaces.Security;
+using BuildFlow.Application.Interfaces.Services;
+using BuildFlow.Domain.Enums;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BuildFlow.Application.Features.Tasks.ChangeTaskStatus;
 
-public class ChangeTaskStatusHandler : IRequestHandler<ChangeTaskStatusCommand, ChangeTaskStatusResponse>
+public class ChangeTaskStatusHandler
+    : IRequestHandler<ChangeTaskStatusCommand, ChangeTaskStatusResponse>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly INotificationService _notificationService;
 
     public ChangeTaskStatusHandler(
         ITaskRepository taskRepository,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        INotificationService notificationService)
     {
         _taskRepository = taskRepository;
         _currentUserService = currentUserService;
+        _notificationService = notificationService;
     }
 
     public async Task<ChangeTaskStatusResponse> Handle(
@@ -41,10 +44,26 @@ public class ChangeTaskStatusHandler : IRequestHandler<ChangeTaskStatusCommand, 
         }
 
         task.Status = (Domain.Enums.TaskStatus)request.Request.Status;
+
         task.ModifiedAt = DateTime.UtcNow;
         task.ModifiedBy = userId.ToString();
 
         await _taskRepository.UpdateAsync(task);
+
+        // Create notification for assigned user
+        if (task.AssignedToUserId.HasValue &&
+            task.AssignedToUserId.Value != userId)
+        {
+            await _notificationService.CreateAsync(
+                tenantId,
+                task.AssignedToUserId.Value,
+                NotificationType.TaskStatusChanged,
+                "Task Status Changed",
+                $"The status of task '{task.Title}' has been changed.",
+                task.Id,
+                "Task",
+                userId);
+        }
 
         return new ChangeTaskStatusResponse
         {

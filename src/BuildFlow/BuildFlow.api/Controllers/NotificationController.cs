@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.Notifications.GetNotifications;
+using BuildFlow.Application.Features.Notifications.MarkAllAsRead;
 using BuildFlow.Application.Features.Notifications.MarkAsRead;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +40,17 @@ namespace BuildFlow.api.Controllers
             {
                 return NotFound(result);
             }
+
+            return Ok(result);
+        }
+
+
+        [HttpPut("read-all")]
+        public async Task<IActionResult> MarkAllAsRead()
+        {
+            var command = new MarkAllNotificationsAsReadCommand();
+
+            var result = await _mediator.Send(command);
 
             return Ok(result);
         }
