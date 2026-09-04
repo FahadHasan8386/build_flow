@@ -1,5 +1,6 @@
 ﻿using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Application.Interfaces.Security;
+using BuildFlow.Application.Interfaces.Services;
 using BuildFlow.Domain.Entities;
 using BuildFlow.Domain.Enums;
 using MediatR;
@@ -12,13 +13,18 @@ public class AddProjectMemberHandler
     private readonly IProjectMemberRepository _projectMemberRepository;
     private readonly IProjectRepository _projectRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly INotificationService _notificationService;
+
 
     public AddProjectMemberHandler(IProjectMemberRepository projectMemberRepository,
-        IProjectRepository projectRepository,ICurrentUserService currentUserService)
+        IProjectRepository projectRepository,
+        ICurrentUserService currentUserService,
+        INotificationService notificationService)
     {
         _projectMemberRepository = projectMemberRepository;
         _projectRepository = projectRepository;
         _currentUserService = currentUserService;
+        _notificationService = notificationService;
     }
 
     public async Task<AddProjectMemberResponse> Handle(AddProjectMemberCommand request,CancellationToken cancellationToken)
@@ -126,6 +132,16 @@ public class AddProjectMemberHandler
 
             await _projectMemberRepository.AddRoleAsync(memberRole);
         }
+
+        await _notificationService.CreateAsync(
+            tenantId,
+            request.Request.UserId,
+            NotificationType.ProjectMemberAdded,
+            "Added to Project",
+            $"You have been added to project: {project.Name}",
+            project.Id,
+            "Project",
+            _currentUserService.UserId);
 
         return new AddProjectMemberResponse
         {
