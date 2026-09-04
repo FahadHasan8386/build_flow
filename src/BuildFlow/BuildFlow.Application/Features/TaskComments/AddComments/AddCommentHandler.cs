@@ -1,6 +1,8 @@
 ﻿using BuildFlow.Application.Interfaces.Repositories;
 using BuildFlow.Application.Interfaces.Security;
+using BuildFlow.Application.Interfaces.Services;
 using BuildFlow.Domain.Entities;
+using BuildFlow.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,13 +15,17 @@ public class AddCommentHandler : IRequestHandler<AddCommentCommand, AddCommentRe
     private readonly ITaskCommentRepository _commentRepository;
     private readonly ITaskRepository _taskRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly INotificationService _notificationService;
 
-    public AddCommentHandler( ITaskCommentRepository commentRepository,ITaskRepository taskRepository,
-        ICurrentUserService currentUserService)
+    public AddCommentHandler(ITaskCommentRepository commentRepository,
+        ITaskRepository taskRepository,
+        ICurrentUserService currentUserService,
+        INotificationService notificationService)
     {
         _commentRepository = commentRepository;
         _taskRepository = taskRepository;
         _currentUserService = currentUserService;
+        _notificationService = notificationService;
     }
 
     public async Task<AddCommentResponse> Handle(AddCommentCommand request,CancellationToken cancellationToken)
@@ -55,6 +61,19 @@ public class AddCommentHandler : IRequestHandler<AddCommentCommand, AddCommentRe
         };
 
         await _commentRepository.AddAsync(comment);
+
+        if (task.AssignedToUserId.HasValue && task.AssignedToUserId.Value != userId)
+        {
+            await _notificationService.CreateAsync(
+                tenantId,
+                task.AssignedToUserId.Value,
+                NotificationType.TaskCommentAdded,
+                "New Comment Added",
+                $"A new comment was added to task: {task.Title}",
+                task.Id,
+                "Task",
+                userId);
+        }
 
         return new AddCommentResponse
         {
