@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.Notifications.GetNotifications;
+using BuildFlow.Application.Features.Notifications.GetUnreadNotificationCount;
 using BuildFlow.Application.Features.Notifications.MarkAllAsRead;
 using BuildFlow.Application.Features.Notifications.MarkAsRead;
 using MediatR;
@@ -51,6 +52,17 @@ namespace BuildFlow.api.Controllers
             var command = new MarkAllNotificationsAsReadCommand();
 
             var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+
+        [HttpGet("unread-count")]
+        public async Task<IActionResult> GetUnreadCount()
+        {
+            var query = new GetUnreadNotificationCountQuery();
+
+            var result = await _mediator.Send(query);
 
             return Ok(result);
         }
