@@ -19,4 +19,5 @@ public interface INotificationRepository
 
      Task DeleteAsync(Guid notificationId, Guid userId, Guid tenantId);
 
+     Task<int> GetUnreadCountAsync(Guid userId,Guid tenantId);
 }

@@ -138,10 +138,7 @@ public class NotificationRepository : INotificationRepository
             });
     }
 
-    public async Task DeleteAsync(
-        Guid notificationId,
-        Guid userId,
-        Guid tenantId)
+    public async Task DeleteAsync(Guid notificationId,Guid userId,Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
@@ -164,6 +161,24 @@ public class NotificationRepository : INotificationRepository
                 TenantId = tenantId,
                 ModifiedAt = DateTime.UtcNow,
                 ModifiedBy = userId.ToString()
+            });
+    }
+
+    public async Task<int> GetUnreadCountAsync(Guid userId, Guid tenantId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @"SELECT COUNT(*)
+                FROM Notifications
+                WHERE UserId = @UserId
+                  AND TenantId = @TenantId
+                  AND IsRead = 0
+                  AND IsDeleted = 0";
+
+        return await connection.ExecuteScalarAsync<int>(sql,new
+            {
+                UserId = userId,
+                TenantId = tenantId
             });
     }
 }
