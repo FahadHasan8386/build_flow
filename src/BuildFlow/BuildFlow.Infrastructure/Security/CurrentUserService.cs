@@ -24,6 +24,13 @@ public class CurrentUserService : ICurrentUserService
     public Guid TenantId =>
         GetGuidClaim("TenantId");
 
+    public bool IsInRole(string role)
+    {
+        return _httpContextAccessor.HttpContext?
+            .User?
+            .IsInRole(role) ?? false;
+    }
+
     private Guid GetGuidClaim(string claimType)
     {
         var value = _httpContextAccessor.HttpContext?

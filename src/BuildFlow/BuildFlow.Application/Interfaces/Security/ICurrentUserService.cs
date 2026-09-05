@@ -11,4 +11,5 @@ public interface ICurrentUserService
     Guid TenantId { get; }
 
     bool IsAuthenticated { get; }
+    bool IsInRole(string role); 
 }

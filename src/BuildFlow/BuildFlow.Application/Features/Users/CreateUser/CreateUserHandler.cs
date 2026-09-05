@@ -41,6 +41,15 @@ public class CreateUserHandler
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new CreateUserResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can create users."
+            };
+        }
+
         // Get current tenant from JWT
         var tenantId = _currentUserService.TenantId;
 

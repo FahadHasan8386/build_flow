@@ -66,9 +66,61 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection =
+            _connectionFactory.CreateConnection();
 
-        return await connection.ExecuteScalarAsync<int>("SELECT COUNT(1) FROM Users WHERE Email=@Email",
+        const string sql = @" SELECT COUNT(1)
+                            FROM Users
+                            WHERE Email = @Email
+                              AND IsDeleted = 0";
+
+        return await connection.ExecuteScalarAsync<int>(
+            sql,
             new { Email = email }) > 0;
     }
+
+
+    public async Task<bool> ExistsByEmailAsync(string email, Guid tenantId)
+    {
+        using var connection =
+            _connectionFactory.CreateConnection();
+
+        const string sql = @"
+        SELECT COUNT(1)
+        FROM Users
+        WHERE Email = @Email
+          AND TenantId = @TenantId
+          AND IsDeleted = 0";
+
+        return await connection.ExecuteScalarAsync<int>(
+            sql,
+            new
+            {
+                Email = email,
+                TenantId = tenantId
+            }) > 0;
+    }
+
+    public async Task<IEnumerable<User>> GetAllAsync(Guid tenantId)
+    {
+        using var connection =
+            _connectionFactory.CreateConnection();
+
+        const string sql = @"SELECT Id, TenantId, FirstName, LastName, Email,
+                        IsActive,CreatedAt, CreatedBy,ModifiedAt,ModifiedBy,IsDeleted
+                    FROM Users
+                    WHERE TenantId = @TenantId
+                      AND IsDeleted = 0
+                    ORDER BY CreatedAt DESC";
+
+        return await connection.QueryAsync<User>(
+            sql,
+            new
+            {
+                TenantId = tenantId
+            });
+    }
+
+
+    
 }
