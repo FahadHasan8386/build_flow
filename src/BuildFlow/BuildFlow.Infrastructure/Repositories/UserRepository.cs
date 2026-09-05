@@ -121,6 +121,21 @@ public class UserRepository : IUserRepository
             });
     }
 
+    public async Task UpdateAsync(User user)
+    {
+        using var connection = _connectionFactory.CreateConnection();
 
-    
+        const string sql = @"UPDATE Users
+                        SET FirstName = @FirstName,
+                            LastName = @LastName,
+                            Email = @Email,
+                            ModifiedAt = @ModifiedAt,
+                            ModifiedBy = @ModifiedBy
+                        WHERE Id = @Id
+                          AND TenantId = @TenantId
+                          AND IsDeleted = 0";
+
+        await connection.ExecuteAsync(sql, user);
+    }
+
 }
