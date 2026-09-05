@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.Users.CreateUser;
+using BuildFlow.Application.Features.Users.GetUserById;
 using BuildFlow.Application.Features.Users.GetUsers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,18 @@ namespace BuildFlow.api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{userId:guid}")]
+        public async Task<IActionResult> GetUserById(Guid userId)
+        {
+            var result = await _mediator.Send(
+                new GetUserByIdQuery(userId));
 
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
+
+            return Ok(result);
+        }
     }
 }
