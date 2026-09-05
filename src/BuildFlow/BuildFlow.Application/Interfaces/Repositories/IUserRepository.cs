@@ -12,7 +12,7 @@ public interface IUserRepository
 
     Task<User?> GetByEmailAsync(string email , Guid tenantId);
 
-    Task<User?> GetByIdAsync(Guid id);
+    Task<User?> GetByIdAsync(Guid id , Guid tenantId);
 
     Task<bool> ExistsByEmailAsync(string email);
 }

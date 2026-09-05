@@ -51,13 +51,17 @@ public class UserRepository : IUserRepository
             });
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id , Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
+        const string sql = @"SELECT * FROM Users WHERE Id = @Id
+                             AND TenantId = @TenantId
+                             AND IsDeleted = 0";
+
         return await connection.QueryFirstOrDefaultAsync<User>(
-            "SELECT * FROM Users WHERE Id=@Id",
-            new { Id = id });
+            sql,
+            new { Id = id, TenantId = tenantId });
     }
 
     public async Task<bool> ExistsByEmailAsync(string email)
