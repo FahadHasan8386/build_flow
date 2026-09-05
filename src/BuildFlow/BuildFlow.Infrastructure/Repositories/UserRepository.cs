@@ -70,9 +70,9 @@ public class UserRepository : IUserRepository
             _connectionFactory.CreateConnection();
 
         const string sql = @" SELECT COUNT(1)
-                            FROM Users
-                            WHERE Email = @Email
-                              AND IsDeleted = 0";
+                        FROM Users
+                        WHERE Email = @Email
+                          AND IsDeleted = 0";
 
         return await connection.ExecuteScalarAsync<int>(
             sql,
