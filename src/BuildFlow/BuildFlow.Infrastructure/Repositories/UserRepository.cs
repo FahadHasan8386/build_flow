@@ -138,4 +138,19 @@ public class UserRepository : IUserRepository
         await connection.ExecuteAsync(sql, user);
     }
 
+    public async Task UpdateStatusAsync(User user)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @"UPDATE Users
+                    SET
+                        IsActive = @IsActive,
+                        ModifiedAt = @ModifiedAt,
+                        ModifiedBy = @ModifiedBy
+                    WHERE Id = @Id
+                      AND TenantId = @TenantId
+                      AND IsDeleted = 0";
+
+        await connection.ExecuteAsync(sql, user);
+    }
 }

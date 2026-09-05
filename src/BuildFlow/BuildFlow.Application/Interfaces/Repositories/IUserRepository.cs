@@ -18,4 +18,6 @@ public interface IUserRepository
     Task<bool> ExistsByEmailAsync(string email);
 
     Task<bool> ExistsByEmailAsync(string email, Guid tenantId);
+    Task UpdateAsync( User user);
+    Task UpdateStatusAsync(User user);
 }

@@ -1,6 +1,7 @@
 ﻿using BuildFlow.Application.Features.Users.CreateUser;
 using BuildFlow.Application.Features.Users.GetUserById;
 using BuildFlow.Application.Features.Users.GetUsers;
+using BuildFlow.Application.Features.Users.UpdateUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,19 @@ namespace BuildFlow.api.Controllers
             if (!result.Success)
             {
                 return NotFound(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut("{userId:guid}")]
+        public async Task<IActionResult> UpdateUser(Guid userId,[FromBody] UpdateUserRequest request)
+        {
+            var result = await _mediator.Send(  new UpdateUserCommand(userId, request));
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
             }
 
             return Ok(result);
