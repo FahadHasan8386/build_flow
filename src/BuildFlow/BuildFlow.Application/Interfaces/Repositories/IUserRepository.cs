@@ -10,7 +10,7 @@ public interface IUserRepository
 {
     Task<Guid> CreateAsync(User user,IDbConnection connection,IDbTransaction transaction);
 
-    Task<User?> GetByEmailAsync(string email);
+    Task<User?> GetByEmailAsync(string email , Guid tenantId);
 
     Task<User?> GetByIdAsync(Guid id);
 

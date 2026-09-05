@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
     {
 
         const string sql = @"INSERT INTO Users(Id,TenantId,FirstName,LastName,Email,PasswordHash,
-                             IsActive,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,InActive)
+                             IsActive,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,IsDeleted)
                         VALUES
                         (@Id, @TenantId, @FirstName,@LastName, @Email,@PasswordHash, @IsActive,@CreatedBy,
                             @CreatedAt,@ModifiedBy, @ModifiedAt,@IsDeleted);";
@@ -34,13 +34,21 @@ public class UserRepository : IUserRepository
         return user.Id;
     }
 
-    public async Task<User?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email , Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
+        const string sql = @"SELECT * FROM Users WHERE Email= @Email
+                             AND TenantId = @TenantId
+                             AND IsDeleted = 0";
+
         return await connection.QueryFirstOrDefaultAsync<User>(
-            "SELECT * FROM Users WHERE Email=@Email",
-            new { Email = email });
+            sql,
+            new
+            {
+                Email = email,
+                TenantId = tenantId
+            });
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
