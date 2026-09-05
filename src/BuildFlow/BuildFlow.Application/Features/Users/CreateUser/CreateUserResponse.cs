@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BuildFlow.Shared.Responses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Users.CreateUser
+namespace BuildFlow.Application.Features.Users.CreateUser;
+
+public class CreateUserResponse : ApiResponse
 {
-    internal class CreateUserResponse
-    {
-    }
+    public Guid UserId { get; set; }
 }
