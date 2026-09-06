@@ -105,8 +105,7 @@ public class UserRepository : IUserRepository
                           AND TenantId = @TenantId
                           AND IsDeleted = 0";
 
-        return await connection.ExecuteScalarAsync<int>(
-            sql,
+        return await connection.ExecuteScalarAsync<int>( sql,
             new
             {
                 Email = email,
@@ -158,6 +157,23 @@ public class UserRepository : IUserRepository
         const string sql = @"UPDATE Users
                     SET
                         IsActive = @IsActive,
+                        ModifiedAt = @ModifiedAt,
+                        ModifiedBy = @ModifiedBy
+                    WHERE Id = @Id
+                      AND TenantId = @TenantId
+                      AND IsDeleted = 0";
+
+        await connection.ExecuteAsync(sql, user);
+    }
+
+    public async Task SoftDeleteAsync(User user)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @"UPDATE Users
+                    SET
+                        IsDeleted = 1,
+                        IsActive = 0,
                         ModifiedAt = @ModifiedAt,
                         ModifiedBy = @ModifiedBy
                     WHERE Id = @Id

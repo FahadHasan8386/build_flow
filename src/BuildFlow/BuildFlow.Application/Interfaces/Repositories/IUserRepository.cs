@@ -24,4 +24,5 @@ public interface IUserRepository
     Task UpdateAsync( User user);
 
     Task UpdateStatusAsync(User user);
+    Task SoftDeleteAsync(User user);
 }
