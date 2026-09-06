@@ -25,7 +25,7 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, RefreshT
             return new RefreshTokenResponse { Success = false, Message = "Refresh token is invalid or expired." };
         }
 
-        var user = await _userRepository.GetByIdAsync(stored.UserId);
+        var user = await _userRepository.GetByIdAsync(stored.UserId , stored.TenantId);
         if (user is null)
         {
             return new RefreshTokenResponse { Success = false, Message = "User not found." };

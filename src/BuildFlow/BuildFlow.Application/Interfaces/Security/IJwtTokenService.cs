@@ -9,5 +9,5 @@ public interface IJwtTokenService
 {
     string GenerateAccessToken(User user , string role);
 
-    RefreshToken GenerateRefreshToken(Guid userId);
+    RefreshToken GenerateRefreshToken(Guid userId , Guid tenantId);
 }

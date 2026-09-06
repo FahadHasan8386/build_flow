@@ -36,7 +36,7 @@ public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
         }
 
         var role = "Admin";
-        var refreshToken = _jwtTokenService.GenerateRefreshToken(user.Id);
+        var refreshToken = _jwtTokenService.GenerateRefreshToken(user.Id , user.TenantId);
         using var connection = _connectionFactory.CreateConnection();
         connection.Open();
         await _refreshTokenRepository.CreateAsync(refreshToken, connection, null!);

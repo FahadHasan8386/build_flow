@@ -25,7 +25,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
         const string sql = @"
                             INSERT INTO RefreshTokens
-                            (Id, UserId,Token, ExpiresAt, RevokedAt,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,InActive)
+                            (Id, UserId,Token, ExpiresAt, RevokedAt,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt,IsDeleted)
                             VALUES
                             (@Id,@UserId,@Token,@ExpiresAt,@RevokedAt,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@IsDeleted);";
 
@@ -37,7 +37,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         using var connection = _connectionFactory.CreateConnection();
 
         return await connection.QueryFirstOrDefaultAsync<RefreshToken>(
-            "SELECT * FROM RefreshTokens WHERE Token=@Token",
+            "SELECT * FROM RefreshTokens WHERE Token = @Token",
             new { Token = token });
     }
 

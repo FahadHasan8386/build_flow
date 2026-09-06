@@ -67,12 +67,13 @@ public class JwtTokenService : IJwtTokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public RefreshToken GenerateRefreshToken(Guid userId)
+    public RefreshToken GenerateRefreshToken(Guid userId , Guid tenantId)
     {
         return new RefreshToken
         {
             Id = Guid.NewGuid(),
             UserId = userId,
+            TenantId = tenantId,
             Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
             ExpiresAt = DateTime.UtcNow.AddDays(
                 Convert.ToDouble(_configuration["Jwt:RefreshTokenExpirationDays"]))

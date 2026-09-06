@@ -110,7 +110,7 @@ public class RegisterTenantHandler : IRequestHandler<RegisterTenantCommand, Regi
                 IsDeleted = false
             }, connection, transaction);
 
-            var refreshToken = _jwtTokenService.GenerateRefreshToken(userId);
+            var refreshToken = _jwtTokenService.GenerateRefreshToken(userId, tenantId);
             await _refreshTokenRepository.CreateAsync(refreshToken, connection, transaction);
 
             transaction.Commit();
