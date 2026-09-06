@@ -10,14 +10,18 @@ public interface IUserRepository
 {
     Task<Guid> CreateAsync(User user,IDbConnection connection,IDbTransaction transaction);
 
+    Task<User?> GetByEmailAsync(string email);
     Task<User?> GetByEmailAsync(string email , Guid tenantId);
 
     Task<User?> GetByIdAsync(Guid id , Guid tenantId);
 
     Task<IEnumerable<User>> GetAllAsync(Guid tenantId);
-    Task<bool> ExistsByEmailAsync(string email);
+
+    Task<bool> ExistsByEmailAsync( string email);
 
     Task<bool> ExistsByEmailAsync(string email, Guid tenantId);
+
     Task UpdateAsync( User user);
+
     Task UpdateStatusAsync(User user);
 }

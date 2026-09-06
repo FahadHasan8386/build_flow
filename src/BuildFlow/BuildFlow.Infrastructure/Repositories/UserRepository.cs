@@ -34,6 +34,20 @@ public class UserRepository : IUserRepository
         return user.Id;
     }
 
+    // Login / Registration
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        const string sql = @" SELECT *
+                        FROM Users
+                        WHERE Email = @Email
+                          AND IsDeleted = 0";
+
+        return await connection.QueryFirstOrDefaultAsync<User>(
+            sql,
+            new { Email = email });
+    }
     public async Task<User?> GetByEmailAsync(string email , Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
@@ -85,12 +99,11 @@ public class UserRepository : IUserRepository
         using var connection =
             _connectionFactory.CreateConnection();
 
-        const string sql = @"
-        SELECT COUNT(1)
-        FROM Users
-        WHERE Email = @Email
-          AND TenantId = @TenantId
-          AND IsDeleted = 0";
+        const string sql = @" SELECT COUNT(1)
+                        FROM Users
+                        WHERE Email = @Email
+                          AND TenantId = @TenantId
+                          AND IsDeleted = 0";
 
         return await connection.ExecuteScalarAsync<int>(
             sql,
