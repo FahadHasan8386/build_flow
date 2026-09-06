@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BuildFlow.Shared.Responses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BuildFlow.Application.Features.Users.DeleteUser
+namespace BuildFlow.Application.Features.Users.DeleteUser;
+
+public class DeleteUserResponse : ApiResponse
 {
-    internal class DeleteUserResponse
-    {
-    }
+    public Guid UserId { get; set; }
 }
