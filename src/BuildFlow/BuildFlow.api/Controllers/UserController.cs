@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Application.Features.Users.CreateUser;
+using BuildFlow.Application.Features.Users.DeleteUser;
 using BuildFlow.Application.Features.Users.GetUserById;
 using BuildFlow.Application.Features.Users.GetUsers;
 using BuildFlow.Application.Features.Users.UpdateUser;
@@ -86,6 +87,18 @@ namespace BuildFlow.api.Controllers
             {
                 return BadRequest(result);
             }
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{userId:guid}")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
+        {
+            var result = await _mediator.Send(
+                new DeleteUserCommand(userId));
+
+            if (!result.Success)
+                return BadRequest(result);
 
             return Ok(result);
         }
