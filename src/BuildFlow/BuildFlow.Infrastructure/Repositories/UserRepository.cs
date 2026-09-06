@@ -42,7 +42,7 @@ public class UserRepository : IUserRepository
         const string sql = @" SELECT *
                         FROM Users
                         WHERE Email = @Email
-                          AND IsDeleted = 0";
+                          AND IsActive = 0";
 
         return await connection.QueryFirstOrDefaultAsync<User>(
             sql,

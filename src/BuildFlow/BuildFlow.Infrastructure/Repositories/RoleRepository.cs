@@ -23,7 +23,7 @@ public class RoleRepository : IRoleRepository
     {
 
         const string sql = @"INSERT INTO Roles
-                            (Id,TenantId,Name,Description,IsSystemRole,CreatedBy,CreatedAt, ModifiedBy,ModifiedAt,InActive)
+                            (Id,TenantId,Name,Description,IsSystemRole,CreatedBy,CreatedAt, ModifiedBy,ModifiedAt,IsDeleted)
                             VALUES
                             ( @Id, @TenantId,@Name,@Description,@IsSystemRole,@CreatedBy,@CreatedAt, @ModifiedBy,@ModifiedAt,@IsDeleted);";
 

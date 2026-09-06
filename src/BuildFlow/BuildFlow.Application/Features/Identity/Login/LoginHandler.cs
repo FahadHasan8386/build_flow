@@ -13,8 +13,7 @@ public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
     private readonly IPasswordHasher _passwordHasher;
     private readonly IDbConnectionFactory _connectionFactory;
 
-    public LoginHandler(
-        IUserRepository userRepository,
+    public LoginHandler(IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IJwtTokenService jwtTokenService,
         IPasswordHasher passwordHasher,

@@ -22,7 +22,7 @@ public class TenantRepository : ITenantRepository
     public async Task<Guid> CreateAsync(Tenant tenant , IDbConnection connection,IDbTransaction transaction)
     {
 
-        string sql = @"INSERT INTO Tenants(Id,Name,Slug,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt, InActive)
+        string sql = @"INSERT INTO Tenants(Id,Name,Slug,CreatedBy,CreatedAt,ModifiedBy,ModifiedAt, IsDeleted)
                        VALUES(@Id,@Name,@Slug,@CreatedBy,@CreatedAt,@ModifiedBy,@ModifiedAt,@IsDeleted);";
 
         await connection.ExecuteAsync(sql, tenant , transaction);
