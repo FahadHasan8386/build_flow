@@ -7,8 +7,7 @@ using MediatR;
 
 namespace BuildFlow.Application.Features.ProjectMembers.AddProjectMember;
 
-public class AddProjectMemberHandler
-    : IRequestHandler<AddProjectMemberCommand, AddProjectMemberResponse>
+public class AddProjectMemberHandler : IRequestHandler<AddProjectMemberCommand, AddProjectMemberResponse>
 {
     private readonly IProjectMemberRepository _projectMemberRepository;
     private readonly IProjectRepository _projectRepository;

@@ -8,18 +8,21 @@ namespace BuildFlow.Application.Features.Identity.Login;
 public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IUserRoleRepository _userRoleRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IJwtTokenService _jwtTokenService;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IDbConnectionFactory _connectionFactory;
 
     public LoginHandler(IUserRepository userRepository,
+        IUserRoleRepository userRoleRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IJwtTokenService jwtTokenService,
         IPasswordHasher passwordHasher,
         IDbConnectionFactory connectionFactory)
     {
         _userRepository = userRepository;
+        _userRoleRepository = userRoleRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _jwtTokenService = jwtTokenService;
         _passwordHasher = passwordHasher;
@@ -52,7 +55,20 @@ public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
             };
         }
 
-        var role = "Admin";
+        var userRole = await _userRoleRepository.GetUserRoleAsync(user.Id,
+                user.TenantId);
+
+        if (userRole is null)
+        {
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "User role not found."
+            };
+        }
+
+        var role = userRole.Name;
+
         var refreshToken = _jwtTokenService.GenerateRefreshToken(user.Id , user.TenantId);
         using var connection = _connectionFactory.CreateConnection();
         connection.Open();
