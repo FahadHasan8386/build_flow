@@ -9,24 +9,25 @@ using System.Text;
 
 namespace BuildFlow.Application.Features.Users.CreateUser;
 
-public class CreateUserHandler
-    : IRequestHandler<CreateUserCommand, CreateUserResponse>
+public class CreateUserHandler : IRequestHandler<CreateUserCommand, CreateUserResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly ICurrentUserService _currentUserService;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IDbConnectionFactory _connectionFactory;
+    private readonly IRoleRepository _roleRepository;
+    private readonly IUserRoleRepository _userRoleRepository;
 
-    public CreateUserHandler(
-        IUserRepository userRepository,
-        ICurrentUserService currentUserService,
-        IPasswordHasher passwordHasher,
-        IDbConnectionFactory connectionFactory)
+    public CreateUserHandler(IUserRepository userRepository,ICurrentUserService currentUserService,
+            IPasswordHasher passwordHasher, IDbConnectionFactory connectionFactory,
+            IRoleRepository roleRepository, IUserRoleRepository userRoleRepository)
     {
         _userRepository = userRepository;
         _currentUserService = currentUserService;
         _passwordHasher = passwordHasher;
         _connectionFactory = connectionFactory;
+        _roleRepository = roleRepository;
+        _userRoleRepository = userRoleRepository;
     }
 
     public async Task<CreateUserResponse> Handle(CreateUserCommand request,CancellationToken cancellationToken)
@@ -120,6 +121,24 @@ public class CreateUserHandler
         {
             // Save User
             var userId = await _userRepository.CreateAsync( user, connection, transaction);
+
+            //Find User role
+            var userRole = await _roleRepository.GetByNameAsync(tenantId, "User");
+
+            if (userRole is null)
+            {
+                throw new InvalidOperationException("User role not found .");
+            }
+            
+            await _userRoleRepository.CreateAsync(new UserRole
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                RoleId = userRole.Id,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = currentUserId.ToString(),
+                IsDeleted = false
+            }, connection, transaction);
 
             // Commit
             transaction.Commit();
