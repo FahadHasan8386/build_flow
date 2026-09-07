@@ -98,6 +98,22 @@ public class RegisterTenantHandler : IRequestHandler<RegisterTenantCommand, Regi
 
             var roleId = await _roleRepository.CreateAsync(adminRole, connection, transaction);
 
+            var userRole = new Role
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                Name = "User",
+                Description = "Regular tenant user",
+                IsSystemRole = true,
+                CreatedBy = request.Request.Email,
+                CreatedAt = DateTime.UtcNow,
+                ModifiedBy = request.Request.Email,
+                ModifiedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            await _roleRepository.CreateAsync( userRole, connection, transaction);
+
             await _userRoleRepository.CreateAsync(new UserRole
             {
                 Id = Guid.NewGuid(),

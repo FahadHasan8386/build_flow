@@ -29,9 +29,27 @@ public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Request.Email);
-        if (user is null || !_passwordHasher.VerifyPassword(request.Request.Password, user.PasswordHash))
+
+        if (user is null)
         {
-            return new LoginResponse { Success = false, Message = "Invalid email or password." };
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "User not found."
+            };
+        }
+
+        var passwordValid = _passwordHasher.VerifyPassword(
+            request.Request.Password,
+            user.PasswordHash);
+
+        if (!passwordValid)
+        {
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "Password verification failed."
+            };
         }
 
         var role = "Admin";

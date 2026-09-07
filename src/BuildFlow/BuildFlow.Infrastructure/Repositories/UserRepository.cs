@@ -40,9 +40,10 @@ public class UserRepository : IUserRepository
         using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @" SELECT *
-                        FROM Users
-                        WHERE Email = @Email
-                          AND IsActive = 0";
+                            FROM Users
+                            WHERE Email = @Email
+                              AND IsActive = 1
+                              AND IsDeleted = 0";
 
         return await connection.QueryFirstOrDefaultAsync<User>(
             sql,
