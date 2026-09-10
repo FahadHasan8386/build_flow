@@ -33,10 +33,10 @@ public class ProjectMemberRepository : IProjectMemberRepository
         using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @"SELECT *FROM ProjectMembers
-            WHERE ProjectId = @ProjectId
-              AND UserId = @UserId
-              AND TenantId = @TenantId
-              AND IsDeleted = 0;";
+                    WHERE ProjectId = @ProjectId
+                      AND UserId = @UserId
+                      AND TenantId = @TenantId
+                      AND IsDeleted = 0;";
 
         return await connection.QueryFirstOrDefaultAsync<ProjectMember>(sql,new
             {
@@ -52,10 +52,10 @@ public class ProjectMemberRepository : IProjectMemberRepository
         using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @"SELECT * FROM ProjectMembers
-            WHERE ProjectId = @ProjectId
-              AND TenantId = @TenantId
-              AND IsDeleted = 0
-            ORDER BY CreatedAt DESC;";
+                    WHERE ProjectId = @ProjectId
+                      AND TenantId = @TenantId
+                      AND IsDeleted = 0
+                    ORDER BY CreatedAt DESC;";
 
         return await connection.QueryAsync<ProjectMember>(sql,new
             {
