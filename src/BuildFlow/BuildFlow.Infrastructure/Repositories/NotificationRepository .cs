@@ -32,9 +32,7 @@ public class NotificationRepository : INotificationRepository
         await connection.ExecuteAsync(sql, notification);
     }
 
-    public async Task<IEnumerable<Notification>> GetByUserAsync(
-        Guid userId,
-        Guid tenantId)
+    public async Task<IEnumerable<Notification>> GetByUserAsync(Guid userId,Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
@@ -56,10 +54,7 @@ public class NotificationRepository : INotificationRepository
             });
     }
 
-    public async Task<Notification?> GetByIdAsync(
-        Guid notificationId,
-        Guid userId,
-        Guid tenantId)
+    public async Task<Notification?> GetByIdAsync(Guid notificationId, Guid userId,Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
@@ -82,10 +77,7 @@ public class NotificationRepository : INotificationRepository
             });
     }
 
-    public async Task MarkAsReadAsync(
-        Guid notificationId,
-        Guid userId,
-        Guid tenantId)
+    public async Task MarkAsReadAsync( Guid notificationId,Guid userId,Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
@@ -111,9 +103,7 @@ public class NotificationRepository : INotificationRepository
             });
     }
 
-    public async Task MarkAllAsReadAsync(
-        Guid userId,
-        Guid tenantId)
+    public async Task MarkAllAsReadAsync(Guid userId,Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 
