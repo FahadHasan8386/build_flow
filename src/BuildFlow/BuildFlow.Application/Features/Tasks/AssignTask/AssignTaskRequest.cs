@@ -6,6 +6,6 @@ namespace BuildFlow.Application.Features.Tasks.AssignTask
 {
     public class AssignTaskRequest
     {
-        public Guid UserId { get; set; }
+        public Guid AssignedToUserId { get; set; }
     }
 }

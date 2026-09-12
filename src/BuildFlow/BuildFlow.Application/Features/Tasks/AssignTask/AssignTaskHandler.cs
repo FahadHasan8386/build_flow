@@ -14,9 +14,7 @@ public class AssignTaskHandler
     private readonly ICurrentUserService _currentUserService;
     private readonly INotificationService _notificationService;
 
-    public AssignTaskHandler(
-        ITaskRepository taskRepository,
-        IProjectMemberRepository projectMemberRepository,
+    public AssignTaskHandler(ITaskRepository taskRepository,IProjectMemberRepository projectMemberRepository,
         ICurrentUserService currentUserService,
         INotificationService notificationService)
     {
@@ -50,7 +48,7 @@ public class AssignTaskHandler
         // Check assigned user is a project member
         var member = await _projectMemberRepository.GetMemberAsync(
             task.ProjectId,
-            request.Request.UserId,
+            request.Request.AssignedToUserId,
             tenantId);
 
         if (member is null)
@@ -63,7 +61,7 @@ public class AssignTaskHandler
         }
 
         // Assign task
-        task.AssignedToUserId = request.Request.UserId;
+        task.AssignedToUserId = request.Request.AssignedToUserId;
 
         task.ModifiedAt = DateTime.UtcNow;
         task.ModifiedBy = currentUserId.ToString();
@@ -71,11 +69,8 @@ public class AssignTaskHandler
         await _taskRepository.UpdateAsync(task);
 
         // Create notification
-        await _notificationService.CreateAsync(
-            tenantId,
-            request.Request.UserId,
-            NotificationType.TaskAssigned,
-            "New Task Assigned",
+        await _notificationService.CreateAsync(tenantId,request.Request.AssignedToUserId,
+            NotificationType.TaskAssigned,"New Task Assigned",
             $"You have been assigned task: {task.Title}",
             task.Id,
             "Task",
