@@ -13,7 +13,7 @@ namespace BuildFlow.api.Controllers
 
     [ApiController]
     [Route("api/users")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
