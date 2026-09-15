@@ -15,8 +15,7 @@ public class AssignTaskHandler
     private readonly INotificationService _notificationService;
 
     public AssignTaskHandler(ITaskRepository taskRepository,IProjectMemberRepository projectMemberRepository,
-        ICurrentUserService currentUserService,
-        INotificationService notificationService)
+        ICurrentUserService currentUserService,INotificationService notificationService)
     {
         _taskRepository = taskRepository;
         _projectMemberRepository = projectMemberRepository;
