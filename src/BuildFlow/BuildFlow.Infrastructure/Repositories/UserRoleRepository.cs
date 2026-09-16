@@ -19,8 +19,7 @@ public class UserRoleRepository : IUserRoleRepository
     public async Task<Guid> CreateAsync(UserRole userRole, IDbConnection connection, IDbTransaction transaction)
     {
         const string sql = @" INSERT INTO UserRoles (Id, UserId, RoleId, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt, IsDeleted)
-            VALUES (@Id, @UserId, @RoleId, @CreatedBy, @CreatedAt, @ModifiedBy, @ModifiedAt, @IsDeleted);
-        ";
+            VALUES (@Id, @UserId, @RoleId, @CreatedBy, @CreatedAt, @ModifiedBy, @ModifiedAt, @IsDeleted);";
 
         await connection.ExecuteAsync(sql, userRole, transaction);
         return userRole.Id;
@@ -33,16 +32,15 @@ public class UserRoleRepository : IUserRoleRepository
         using var connection = _connectionFactory.CreateConnection();
 
         const string sql = @" SELECT r.*
-                    FROM UserRoles ur
-                    INNER JOIN Roles r
-                        ON ur.RoleId = r.Id
-                    WHERE ur.UserId = @UserId
-                      AND r.TenantId = @TenantId
-                      AND ur.IsDeleted = 0
-                      AND r.IsDeleted = 0";
+                        FROM UserRoles ur
+                        INNER JOIN Roles r
+                            ON ur.RoleId = r.Id
+                        WHERE ur.UserId = @UserId
+                          AND r.TenantId = @TenantId
+                          AND ur.IsDeleted = 0
+                          AND r.IsDeleted = 0";
 
-        return await connection.QueryFirstOrDefaultAsync<Role>(
-            sql,
+        return await connection.QueryFirstOrDefaultAsync<Role>(sql,
             new
             {
                 UserId = userId,

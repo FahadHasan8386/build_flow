@@ -8,99 +8,98 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BuildFlow.api.Controllers
+namespace BuildFlow.api.Controllers;
+
+
+[ApiController]
+[Route("api/users")]
+[Authorize(Roles = "Admin")]
+public class UserController : ControllerBase
 {
+    private readonly IMediator _mediator;
 
-    [ApiController]
-    [Route("api/users")]
-    [Authorize(Roles = "Admin")]
-    public class UserController : ControllerBase
+    public UserController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public UserController(IMediator mediator)
+    [HttpPost]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
+    {
+        var result = await _mediator.Send(
+            new CreateUserCommand(request));
+
+        if (!result.Success)
         {
-            _mediator = mediator;
+            return BadRequest(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
+        return Ok(result);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetUsers()
+    {
+        var result = await _mediator.Send(
+            new GetUsersQuery());
+
+        if (!result.Success)
         {
-            var result = await _mediator.Send(
-                new CreateUserCommand(request));
-
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            var result = await _mediator.Send(
-                new GetUsersQuery());
-
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
+            return BadRequest(result);
         }
 
-        [HttpGet("{userId:guid}")]
-        public async Task<IActionResult> GetUserById(Guid userId)
+        return Ok(result);
+    }
+
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUserById(Guid userId)
+    {
+        var result = await _mediator.Send(
+            new GetUserByIdQuery(userId));
+
+        if (!result.Success)
         {
-            var result = await _mediator.Send(
-                new GetUserByIdQuery(userId));
-
-            if (!result.Success)
-            {
-                return NotFound(result);
-            }
-
-            return Ok(result);
+            return NotFound(result);
         }
 
-        [HttpPut("{userId:guid}")]
-        public async Task<IActionResult> UpdateUser(Guid userId,[FromBody] UpdateUserRequest request)
+        return Ok(result);
+    }
+
+    [HttpPut("{userId:guid}")]
+    public async Task<IActionResult> UpdateUser(Guid userId,[FromBody] UpdateUserRequest request)
+    {
+        var result = await _mediator.Send(  new UpdateUserCommand(userId, request));
+
+        if (!result.Success)
         {
-            var result = await _mediator.Send(  new UpdateUserCommand(userId, request));
-
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
+            return BadRequest(result);
         }
 
-        [HttpPatch("{userId:guid}/status")]
-        public async Task<IActionResult> UpdateUserStatus(Guid userId,[FromBody] UpdateUserStatusRequest request)
+        return Ok(result);
+    }
+
+    [HttpPatch("{userId:guid}/status")]
+    public async Task<IActionResult> UpdateUserStatus(Guid userId,[FromBody] UpdateUserStatusRequest request)
+    {
+        var result = await _mediator.Send(
+            new UpdateUserStatusCommand(userId, request));
+
+        if (!result.Success)
         {
-            var result = await _mediator.Send(
-                new UpdateUserStatusCommand(userId, request));
-
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
+            return BadRequest(result);
         }
 
-        [HttpDelete("{userId:guid}")]
-        public async Task<IActionResult> DeleteUser(Guid userId)
-        {
-            var result = await _mediator.Send(
-                new DeleteUserCommand(userId));
+        return Ok(result);
+    }
 
-            if (!result.Success)
-                return BadRequest(result);
+    [HttpDelete("{userId:guid}")]
+    public async Task<IActionResult> DeleteUser(Guid userId)
+    {
+        var result = await _mediator.Send(
+            new DeleteUserCommand(userId));
 
-            return Ok(result);
-        }
+        if (!result.Success)
+            return BadRequest(result);
+
+        return Ok(result);
     }
 }

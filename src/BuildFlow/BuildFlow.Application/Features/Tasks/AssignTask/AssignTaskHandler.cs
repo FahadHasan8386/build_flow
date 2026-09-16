@@ -6,8 +6,7 @@ using MediatR;
 
 namespace BuildFlow.Application.Features.Tasks.AssignTask;
 
-public class AssignTaskHandler
-    : IRequestHandler<AssignTaskCommand, AssignTaskResponse>
+public class AssignTaskHandler : IRequestHandler<AssignTaskCommand, AssignTaskResponse>
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IProjectMemberRepository _projectMemberRepository;
