@@ -25,9 +25,7 @@ public class UserRoleRepository : IUserRoleRepository
         return userRole.Id;
     }
 
-    public async Task<Role?> GetUserRoleAsync(
-        Guid userId,
-        Guid tenantId)
+    public async Task<Role?> GetUserRoleAsync(Guid userId, Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
 

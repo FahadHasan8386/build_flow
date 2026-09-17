@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BuildFlow.api.Controllers;
 
-
 [ApiController]
 [Route("api/users")]
 [Authorize(Roles = "Admin")]
