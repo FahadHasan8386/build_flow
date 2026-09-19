@@ -6,7 +6,6 @@ using Dapper;
 using System.Data;
 
 namespace BuildFlow.Infrastructure.Repositories;
-
 public class UserRoleRepository : IUserRoleRepository
 {
     private readonly IDbConnectionFactory _connectionFactory;
@@ -24,7 +23,6 @@ public class UserRoleRepository : IUserRoleRepository
         await connection.ExecuteAsync(sql, userRole, transaction);
         return userRole.Id;
     }
-
     public async Task<Role?> GetUserRoleAsync(Guid userId, Guid tenantId)
     {
         using var connection = _connectionFactory.CreateConnection();
