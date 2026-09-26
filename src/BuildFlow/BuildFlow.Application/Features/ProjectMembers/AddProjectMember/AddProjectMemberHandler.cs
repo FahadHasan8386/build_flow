@@ -37,6 +37,15 @@ public class AddProjectMemberHandler : IRequestHandler<AddProjectMemberCommand, 
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new AddProjectMemberResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can add project members."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
 
         if (tenantId == Guid.Empty)

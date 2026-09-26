@@ -29,6 +29,15 @@ public class CreateProjectHandler : IRequestHandler<CreateProjectCommand, Create
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new CreateProjectResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can create projects."
+            };
+        }
+
         var userId = _currentUserService.UserId;
         var tenantId = _currentUserService.TenantId;
 

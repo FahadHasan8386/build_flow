@@ -32,6 +32,15 @@ public class DeleteProjectHandler : IRequestHandler<DeleteProjectCommand, Delete
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new DeleteProjectResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can delete projects."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
 
         if (tenantId == Guid.Empty)

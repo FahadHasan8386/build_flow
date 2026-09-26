@@ -22,6 +22,24 @@ public class UpdateTaskHandler: IRequestHandler<UpdateTaskCommand, UpdateTaskRes
 
     public async Task<UpdateTaskResponse> Handle(UpdateTaskCommand request,CancellationToken cancellationToken)
     {
+        if (!_currentUserService.IsAuthenticated)
+        {
+            return new UpdateTaskResponse
+            {
+                Success = false,
+                Message = "User is not authenticated."
+            };
+        }
+
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new UpdateTaskResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can update tasks."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
         var userId = _currentUserService.UserId;
 

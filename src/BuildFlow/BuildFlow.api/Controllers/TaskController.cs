@@ -13,7 +13,7 @@ namespace BuildFlow.api.Controllers;
 
 [ApiController]
 [Route("api/tasks")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class TaskController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -35,6 +35,15 @@ public class RemoveProjectMemberHandler: IRequestHandler<RemoveProjectMemberComm
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new RemoveProjectMemberResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can remove project members."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
 
         if (tenantId == Guid.Empty)

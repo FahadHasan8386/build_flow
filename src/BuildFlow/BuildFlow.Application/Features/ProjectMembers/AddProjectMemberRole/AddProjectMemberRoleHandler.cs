@@ -35,6 +35,15 @@ public class AddProjectMemberRoleHandler: IRequestHandler<AddProjectMemberRoleCo
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new AddProjectMemberRoleResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can modify project member roles."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
 
         if (tenantId == Guid.Empty)

@@ -26,6 +26,24 @@ public class AssignTaskHandler : IRequestHandler<AssignTaskCommand, AssignTaskRe
         AssignTaskCommand request,
         CancellationToken cancellationToken)
     {
+        if (!_currentUserService.IsAuthenticated)
+        {
+            return new AssignTaskResponse
+            {
+                Success = false,
+                Message = "User is not authenticated."
+            };
+        }
+
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new AssignTaskResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can assign tasks."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
         var currentUserId = _currentUserService.UserId;
 

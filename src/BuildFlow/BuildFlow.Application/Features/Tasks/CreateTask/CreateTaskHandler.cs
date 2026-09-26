@@ -26,6 +26,24 @@ public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, CreateTaskRe
 
     public async Task<CreateTaskResponse> Handle(CreateTaskCommand request,CancellationToken cancellationToken)
     {
+        if (!_currentUserService.IsAuthenticated)
+        {
+            return new CreateTaskResponse
+            {
+                Success = false,
+                Message = "User is not authenticated."
+            };
+        }
+
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new CreateTaskResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can create tasks."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
         var userId = _currentUserService.UserId;
 

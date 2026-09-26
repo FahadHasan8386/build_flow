@@ -31,6 +31,15 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectCommand, Update
             };
         }
 
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new UpdateProjectResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can update projects."
+            };
+        }
+
         var userId = _currentUserService.UserId;
         var tenantId = _currentUserService.TenantId;
 

@@ -24,6 +24,24 @@ public class DeleteTaskHandler : IRequestHandler<DeleteTaskCommand, DeleteTaskRe
         DeleteTaskCommand request,
         CancellationToken cancellationToken)
     {
+        if (!_currentUserService.IsAuthenticated)
+        {
+            return new DeleteTaskResponse
+            {
+                Success = false,
+                Message = "User is not authenticated."
+            };
+        }
+
+        if (!_currentUserService.IsInRole("Admin"))
+        {
+            return new DeleteTaskResponse
+            {
+                Success = false,
+                Message = "Only tenant administrators can delete tasks."
+            };
+        }
+
         var tenantId = _currentUserService.TenantId;
 
         var task = await _taskRepository.GetByIdAsync(
