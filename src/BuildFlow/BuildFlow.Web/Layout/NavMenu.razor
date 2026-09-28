@@ -1,98 +1,265 @@
 @using BuildFlow.Web.Services
-@inject BuildFlow.Web.Services.Auth.IAuthService Auth
+@using BuildFlow.Web.Services.Auth
+
+@inject IAuthService Auth
 @inject NavigationManager Navigation
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-3">
-	<a class="navbar-brand" href="/">BuildFlow</a>
-	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid px-3 px-lg-4">
 
-	<div class="collapse navbar-collapse" id="navbarNav">
-		<ul class="navbar-nav me-auto">
-			<li class="nav-item">
-				<NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
-			</li>
-			@if (Auth.IsAuthenticated)
-			{
-				<li class="nav-item">
-					<NavLink class="nav-link" href="/dashboard">Dashboard</NavLink>
-				</li>
-			}
-		</ul>
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2"
+           href="/">
+            <span class="brand-icon">🏗️</span>
+            <span>BuildFlow</span>
+        </a>
 
-		<div class="d-flex align-items-center gap-3">
-			@if (Auth.IsAuthenticated)
-			{
-				<!-- Notification Bell -->
-				<NotificationBell />
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#buildFlowNavbar"
+                aria-controls="buildFlowNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
 
-				<!-- User Menu Dropdown -->
-				<div class="dropdown">
-					<button class="btn btn-outline-light btn-sm dropdown-toggle" 
-							type="button" 
-							id="userMenuDropdown" 
-							data-bs-toggle="dropdown" 
-							aria-expanded="false">
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;">
-							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-							<circle cx="12" cy="7" r="4"></circle>
-						</svg>
-						@GetDisplayName()
-					</button>
-					<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
-						<li>
-							<a class="dropdown-item" href="/users">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: -2px;">
-									<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-									<circle cx="12" cy="7" r="4"></circle>
-								</svg>
-								My Profile
-							</a>
-						</li>
-						<li><hr class="dropdown-divider"></li>
-						<li>
-							<button class="dropdown-item" @onclick="HandleLogout">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: -2px;">
-									<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-									<polyline points="16 17 21 12 16 7"></polyline>
-									<line x1="21" y1="12" x2="9" y2="12"></line>
-								</svg>
-								Logout
-							</button>
-						</li>
-					</ul>
-				</div>
-			}
-			else
-			{
-				<a class="btn btn-outline-light btn-sm" href="/login">Login</a>
-				<a class="btn btn-primary btn-sm" href="/register">Register</a>
-			}
-		</div>
-	</div>
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <!-- Navbar Content -->
+        <div class="collapse navbar-collapse" id="buildFlowNavbar">
+
+            <!-- Left Navigation -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <!-- Home -->
+                <li class="nav-item">
+                    <NavLink class="nav-link"
+                             href="/"
+                             Match="NavLinkMatch.All">
+
+                        Home
+                    </NavLink>
+                </li>
+
+                @if (Auth.IsAuthenticated)
+                {
+                    <!-- Dashboard -->
+                    <li class="nav-item">
+                        <NavLink class="nav-link"
+                                 href="/dashboard">
+
+                            Dashboard
+                        </NavLink>
+                    </li>
+
+                    <!-- Projects -->
+                    <li class="nav-item">
+                        <NavLink class="nav-link"
+                                 href="/projects">
+
+                            Projects
+                        </NavLink>
+                    </li>
+
+                    <!-- Tasks -->
+                    <li class="nav-item">
+                        <NavLink class="nav-link"
+                                 href="/tasks">
+
+                            Tasks
+                        </NavLink>
+                    </li>
+
+                    <!-- Team -->
+                    <li class="nav-item">
+                        <NavLink class="nav-link"
+                                 href="/users">
+                            Team
+                        </NavLink>
+                    </li>
+                }
+            </ul>
+
+            <!-- Right Side -->
+            <div class="d-flex align-items-center gap-2">
+
+                @if (Auth.IsAuthenticated)
+                {
+                    <!-- Notifications -->
+                    <div class="nav-notification">
+                        <NotificationBell />
+                    </div>
+
+                    <!-- User Dropdown -->
+                    <div class="dropdown">
+
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle d-flex align-items-center gap-2"
+                                type="button"
+                                id="userMenuDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                            <!-- User Icon -->
+                            <span class="user-avatar">
+                                @GetInitial()
+                            </span>
+
+                            <span class="d-none d-md-inline">
+                                @GetDisplayName()
+                            </span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow"
+                            aria-labelledby="userMenuDropdown">
+
+                            <!-- User Info -->
+                            <li>
+                                <div class="dropdown-header">
+
+                                    <div class="fw-semibold">
+                                        @GetDisplayName()
+                                    </div>
+
+                                    <small class="text-muted">
+                                        @Auth.UserEmail
+                                    </small>
+
+                                </div>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+
+                            <!-- Profile -->
+                            <li>
+                                <a class="dropdown-item"
+                                   href="/users">
+                                    My Profile
+                                </a>
+                            </li>
+
+                            <!-- Dashboard -->
+                            <li>
+                                <a class="dropdown-item"
+                                   href="/dashboard">
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <!-- Notifications -->
+                            <li>
+                                <a class="dropdown-item"
+                                   href="/notifications">
+
+                                    <span class="dropdown-icon">🔔</span>
+                                    Notifications
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+
+                            <!-- Logout -->
+                            <li>
+                                <button class="dropdown-item text-danger"
+                                        type="button"
+                                        @onclick="HandleLogout">
+
+                                    <span class="dropdown-icon">🚪</span>
+                                    Logout
+                                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <!-- Guest -->
+                    <a class="btn btn-outline-light btn-sm"
+                       href="/login">
+                        Login
+                    </a>
+
+                    <a class="btn btn-primary btn-sm"
+                       href="/register">
+                        Register
+                    </a>
+                }
+
+            </div>
+
+        </div>
+    </div>
 </nav>
 
+<style>
+
+
+    /* ============================
+           Notification
+           ============================ */
+
+    .nav-notification {
+        display: flex;
+        align-items: center;
+    }
+
+
+</style>
+
 @code {
-	protected override async Task OnInitializedAsync()
-	{
-		await Auth.InitializeAsync();
-		Auth.AuthChanged += StateHasChanged;
-	}
 
-	private string GetDisplayName()
-	{
-		if (string.IsNullOrWhiteSpace(Auth.UserEmail))
-			return "User";
+    protected override async Task OnInitializedAsync()
+    {
+        await Auth.InitializeAsync();
 
-		var parts = Auth.UserEmail.Split('@');
-		return parts[0].Length > 12 ? parts[0].Substring(0, 12) + "..." : parts[0];
-	}
+        Auth.AuthChanged += OnAuthChanged;
+    }
 
-	private async Task HandleLogout()
-	{
-		await Auth.LogoutAsync();
-		Navigation.NavigateTo("/");
-	}
+    private void OnAuthChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string GetDisplayName()
+    {
+        if (string.IsNullOrWhiteSpace(Auth.UserEmail))
+            return "User";
+
+        var parts = Auth.UserEmail.Split('@');
+
+        var name = parts[0];
+
+        return name.Length > 15
+            ? name.Substring(0, 15) + "..."
+            : name;
+    }
+
+    private string GetInitial()
+    {
+        if (string.IsNullOrWhiteSpace(Auth.UserEmail))
+            return "U";
+
+        return Auth.UserEmail
+            .Substring(0, 1)
+            .ToUpper();
+    }
+
+    private async Task HandleLogout()
+    {
+        await Auth.LogoutAsync();
+
+        Navigation.NavigateTo(
+            "/",
+            forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        Auth.AuthChanged -= OnAuthChanged;
+    }
 }
