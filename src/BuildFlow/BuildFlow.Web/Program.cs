@@ -1,4 +1,5 @@
 using BuildFlow.Web;
+using BuildFlow.Web.Services;
 using BuildFlow.Web.Services.Api;
 using BuildFlow.Web.Services.Auth;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,5 +17,6 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 builder.Services.AddScoped<ApiClient>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 await builder.Build().RunAsync();
