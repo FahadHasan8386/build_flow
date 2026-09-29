@@ -1,0 +1,93 @@
+@page "/register"
+@inject BuildFlow.Web.Services.Auth.IAuthService Auth
+@inject NavigationManager Navigation
+
+<PageTitle>Register</PageTitle>
+
+<div class="row justify-content-center py-5">
+    <div class="col-lg-7 col-md-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-lg-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Create your workspace</h2>
+                    <p class="text-muted">Launch a new tenant and start building with your team.</p>
+                </div>
+
+                <EditForm Model="model" OnValidSubmit="HandleRegister" class="vstack gap-3">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Company name</label>
+                            <InputText @bind-Value="model.CompanyName" class="form-control" placeholder="Acme Labs" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Company slug</label>
+                            <InputText @bind-Value="model.CompanySlug" class="form-control" placeholder="acme" />
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First name</label>
+                            <InputText @bind-Value="model.FirstName" class="form-control" placeholder="Ada" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last name</label>
+                            <InputText @bind-Value="model.LastName" class="form-control" placeholder="Lovelace" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Email</label>
+                        <InputText @bind-Value="model.Email" class="form-control" type="email" placeholder="you@company.com" />
+                    </div>
+
+                    <div>
+                        <label class="form-label">Password</label>
+                        <InputText @bind-Value="model.Password" class="form-control" type="password" placeholder="At least 8 characters" />
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        <div class="alert alert-danger">@error</div>
+                    }
+
+                    <button class="btn btn-success w-100" type="submit">Create account</button>
+                </EditForm>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted">Already have an account?</span>
+                    <a href="/login" class="ms-1">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private BuildFlow.Web.Models.RegisterRequest model = new();
+    private string error = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Auth.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
+
+    private async Task HandleRegister()
+    {
+        error = string.Empty;
+        var success = await Auth.RegisterAsync(model);
+        if (success)
+        {
+            Navigation.NavigateTo("/dashboard");
+            return;
+        }
+
+        error = "We could not create your workspace. Please review the details and try again.";
+    }
+}
