@@ -1,21 +1,22 @@
 ﻿using BuildFlow.Web.Models;
-using BuildFlow.Web.Services.Api;
 using Microsoft.JSInterop;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace BuildFlow.Web.Services.Auth;
+namespace BuildFlow.Web.Services;
 
-public class AuthService : IAuthService
+public class AuthStateService
 {
-    private readonly ApiClient _apiClient;
+    private readonly HttpClient _httpClient;
     private readonly IJSRuntime _jsRuntime;
     private const string StorageKey = "buildflow-auth";
 
     public event Action? AuthChanged;
 
-    public AuthService(ApiClient apiClient, IJSRuntime jsRuntime)
+    public AuthStateService(HttpClient httpClient, IJSRuntime jsRuntime)
     {
-        _apiClient = apiClient;
+        _httpClient = httpClient;
         _jsRuntime = jsRuntime;
     }
 
@@ -25,37 +26,39 @@ public class AuthService : IAuthService
 
     public async Task InitializeAsync()
     {
-        var stored = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", StorageKey);
-        if (string.IsNullOrWhiteSpace(stored))
+        var saved = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", StorageKey);
+        if (string.IsNullOrWhiteSpace(saved))
         {
-            await ClearSessionAsync();
+            await ClearAsync();
             return;
         }
 
         try
         {
-            var payload = JsonSerializer.Deserialize<AuthResponse>(stored);
-            if (payload is null || string.IsNullOrWhiteSpace(payload.AccessToken))
+            var payload = JsonSerializer.Deserialize<AuthResponse>(saved);
+            IsAuthenticated = !string.IsNullOrWhiteSpace(payload?.AccessToken);
+            AccessToken = payload?.AccessToken;
+            UserEmail = payload?.Message;
+            if (IsAuthenticated)
             {
-                await ClearSessionAsync();
+                SetAuthorizationHeader(AccessToken);
+            }
+            else
+            {
+                await ClearAsync();
                 return;
             }
-
-            IsAuthenticated = true;
-            AccessToken = payload.AccessToken;
-            UserEmail = payload.Message;
-            SetAuthorizationHeader(AccessToken);
             AuthChanged?.Invoke();
         }
         catch
         {
-            await ClearSessionAsync();
+            await ClearAsync();
         }
     }
 
     public async Task<bool> LoginAsync(LoginRequest request)
     {
-        var response = await _apiClient.LoginAsync(request);
+        var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
         if (!response.IsSuccessStatusCode)
         {
             return false;
@@ -67,13 +70,13 @@ public class AuthService : IAuthService
             return false;
         }
 
-        await SaveSessionAsync(payload, request.Email);
+        await SaveAsync(payload, request.Email);
         return true;
     }
 
     public async Task<bool> RegisterAsync(RegisterRequest request)
     {
-        var response = await _apiClient.RegisterAsync(request);
+        var response = await _httpClient.PostAsJsonAsync("api/auth/register-tenant", request);
         if (!response.IsSuccessStatusCode)
         {
             return false;
@@ -85,32 +88,22 @@ public class AuthService : IAuthService
             return false;
         }
 
-        await SaveSessionAsync(payload, request.Email);
+        await SaveAsync(payload, request.Email);
         return true;
     }
 
     public async Task LogoutAsync()
     {
-        var stored = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", StorageKey);
-        if (!string.IsNullOrWhiteSpace(stored))
+        var payload = await LoadAsync();
+        if (payload is not null && !string.IsNullOrWhiteSpace(payload.RefreshToken))
         {
-            try
-            {
-                var payload = JsonSerializer.Deserialize<AuthResponse>(stored);
-                if (payload is not null && !string.IsNullOrWhiteSpace(payload.RefreshToken))
-                {
-                       _ = await _apiClient.LogoutAsync(new LogoutRequest { RefreshToken = payload.RefreshToken });
-                }
-            }
-            catch
-            {
-            }
+            _ = await _httpClient.PostAsJsonAsync("api/auth/logout", new LogoutRequest { RefreshToken = payload.RefreshToken });
         }
 
-        await ClearSessionAsync();
+        await ClearAsync();
     }
 
-    private async Task SaveSessionAsync(AuthResponse payload, string? email = null)
+    private async Task SaveAsync(AuthResponse payload, string? email = null)
     {
         var session = new AuthResponse
         {
@@ -130,7 +123,7 @@ public class AuthService : IAuthService
         AuthChanged?.Invoke();
     }
 
-    private async Task ClearSessionAsync()
+    private async Task ClearAsync()
     {
         IsAuthenticated = false;
         AccessToken = null;
@@ -142,6 +135,23 @@ public class AuthService : IAuthService
 
     private void SetAuthorizationHeader(string? token)
     {
-        _apiClient.SetAuthorizationToken(token);
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return;
+        }
+
+        _httpClient.DefaultRequestHeaders.Authorization = null;
+    }
+
+    private async Task<AuthResponse?> LoadAsync()
+    {
+        var saved = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", StorageKey);
+        if (string.IsNullOrWhiteSpace(saved))
+        {
+            return null;
+        }
+
+        return JsonSerializer.Deserialize<AuthResponse>(saved);
     }
 }
