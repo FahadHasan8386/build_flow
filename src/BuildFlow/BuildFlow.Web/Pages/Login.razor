@@ -52,7 +52,7 @@
     {
         if (Auth.IsAuthenticated)
         {
-            Navigation.NavigateTo("/dashboard");
+            Navigation.NavigateTo("/home");
         }
     }
 
@@ -62,7 +62,7 @@
         var success = await Auth.LoginAsync(model);
         if (success)
         {
-            Navigation.NavigateTo("/dashboard");
+            Navigation.NavigateTo("/home");
             return;
         }
 
