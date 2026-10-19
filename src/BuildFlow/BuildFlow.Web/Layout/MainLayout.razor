@@ -1,33 +1,49 @@
 ﻿@inherits LayoutComponentBase
+@inject BuildFlow.Web.Services.Auth.IAuthService Auth
 
 <div class="page">
-
-    <!-- Sidebar -->
     <div class="sidebar">
         <NavMenu />
     </div>
 
-    <!-- Main Content -->
     <main>
-
-        <!-- Top Navigation -->
         <div class="top-row px-4">
+            @if (!Auth.IsAuthenticated)
+            {
+                <NavLink class="nav-link" href="/login">
+                    Login
+                </NavLink>
 
-            <NavLink class="nav-link" href="/login">
-                Login
-            </NavLink>
-
-            <NavLink class="nav-link" href="/register">
-                Register
-            </NavLink>
-
+                <NavLink class="nav-link" href="/register">
+                    Register
+                </NavLink>
+            }
+            else
+            {
+                <span>@Auth.UserEmail</span>
+            }
         </div>
 
-        <!-- Current Page -->
         <article class="content px-4">
             @Body
         </article>
-
     </main>
-
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Auth.InitializeAsync();
+        Auth.AuthChanged += OnAuthChanged;
+    }
+
+    private void OnAuthChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Auth.AuthChanged -= OnAuthChanged;
+    }
+}

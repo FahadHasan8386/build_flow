@@ -1,39 +1,70 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">BuildFlow.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿
+@using BuildFlow.Web.Services.Auth
+@implements IDisposable
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
+@inject IAuthService Auth
+@inject NavigationManager Navigation
+
+<div class="p-3">
+
+    <h4 class="text-white mb-4">BuildFlow</h4>
+
+    @if (Auth.IsAuthenticated)
+    {
+        <p class="text-secondary">WORKSPACE</p>
+
+        <NavLink href="/home" class="nav-link text-white">
+            Dashboard
+        </NavLink>
+
+        <NavLink href="/projects" class="nav-link text-white">
+            Projects
+        </NavLink>
+
+        <NavLink href="/tasks" class="nav-link text-white">
+            My Tasks
+        </NavLink>
+
+        <NavLink href="/team" class="nav-link text-white">
+            Team Members
+        </NavLink>
+
+        <hr />
+
+        <button class="btn btn-outline-light w-100"
+                @onclick="Logout">
+            Logout
+        </button>
+    }
+    else
+    {
+        <p class="text-secondary">GET STARTED</p>
+    }
+
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    protected override async Task OnInitializedAsync()
     {
-        collapseNavMenu = !collapseNavMenu;
+        Auth.AuthChanged += OnAuthChanged;
+
+        // Load saved login state from localStorage
+        await Auth.InitializeAsync();
+    }
+
+    private void OnAuthChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Logout()
+    {
+        await Auth.LogoutAsync();
+        Navigation.NavigateTo("/login");
+    }
+
+    public void Dispose()
+    {
+        Auth.AuthChanged -= OnAuthChanged;
     }
 }
