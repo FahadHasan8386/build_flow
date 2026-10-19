@@ -1,5 +1,4 @@
-﻿
-@using BuildFlow.Web.Services.Auth
+﻿@using BuildFlow.Web.Services.Auth
 @implements IDisposable
 
 @inject IAuthService Auth
@@ -17,9 +16,37 @@
             Dashboard
         </NavLink>
 
-        <NavLink href="/projects" class="nav-link text-white">
-            Projects
-        </NavLink>
+        <!-- Projects Dropdown -->
+        <button class="bf-dropdown-btn"
+                @onclick="ToggleProjects">
+            <span>Projects</span>
+            <span>@(projectsOpen ? "▾" : "▸")</span>
+        </button>
+
+        @if (projectsOpen)
+        {
+            <div class="bf-submenu">
+                <NavLink href="/projects" class="nav-link">
+                    All Projects
+                </NavLink>
+
+                <NavLink href="/projects/create" class="nav-link">
+                    Create Project
+                </NavLink>
+
+                <NavLink href="/projects/get-by-id" class="nav-link">
+                    Get Project By ID
+                </NavLink>
+
+                <NavLink href="/projects/update" class="nav-link">
+                    Update Project
+                </NavLink>
+
+                <NavLink href="/projects/delete" class="nav-link">
+                    Delete Project
+                </NavLink>
+            </div>
+        }
 
         <NavLink href="/tasks" class="nav-link text-white">
             My Tasks
@@ -39,16 +66,29 @@
     else
     {
         <p class="text-secondary">GET STARTED</p>
+
+        <NavLink href="/login" class="nav-link text-white">
+            Login
+        </NavLink>
+
+        <NavLink href="/register" class="nav-link text-white">
+            Register
+        </NavLink>
     }
 
 </div>
 
 @code {
+    private bool projectsOpen;
+
+    private void ToggleProjects()
+    {
+        projectsOpen = !projectsOpen;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         Auth.AuthChanged += OnAuthChanged;
-
-        // Load saved login state from localStorage
         await Auth.InitializeAsync();
     }
 
