@@ -5,69 +5,39 @@
 @inject NavigationManager Navigation
 
 <div class="p-3">
-
-    <h4 class="text-white mb-4">BuildFlow</h4>
+    <h4 class="text-white mb-4 fw-bold">BuildFlow</h4>
 
     @if (Auth.IsAuthenticated)
     {
-        <p class="text-secondary">WORKSPACE</p>
+        <p class="text-secondary small fw-bold mb-2">WORKSPACE</p>
 
-        <NavLink href="/home" class="nav-link text-white">
+        <NavLink href="/home" class="nav-link text-white mb-1" Match="NavLinkMatch.All">
             Dashboard
         </NavLink>
 
-        <!-- Projects Dropdown -->
-        <button class="bf-dropdown-btn"
-                @onclick="ToggleProjects">
-            <span>Projects</span>
-            <span>@(projectsOpen ? "▾" : "▸")</span>
-        </button>
+        <NavLink href="/projects" class="nav-link text-white mb-1">
+            Projects
+        </NavLink>
 
-        @if (projectsOpen)
-        {
-            <div class="bf-submenu">
-                <NavLink href="/projects" class="nav-link">
-                    All Projects
-                </NavLink>
-
-                <NavLink href="/projects/create" class="nav-link">
-                    Create Project
-                </NavLink>
-
-                <NavLink href="/projects/get-by-id" class="nav-link">
-                    Get Project By ID
-                </NavLink>
-
-                <NavLink href="/projects/update" class="nav-link">
-                    Update Project
-                </NavLink>
-
-                <NavLink href="/projects/delete" class="nav-link">
-                    Delete Project
-                </NavLink>
-            </div>
-        }
-
-        <NavLink href="/tasks" class="nav-link text-white">
+        <NavLink href="/tasks" class="nav-link text-white mb-1">
             My Tasks
         </NavLink>
 
-        <NavLink href="/team" class="nav-link text-white">
+        <NavLink href="/team" class="nav-link text-white mb-3">
             Team Members
         </NavLink>
 
-        <hr />
+        <hr class="border-secondary" />
 
-        <button class="btn btn-outline-light w-100"
-                @onclick="Logout">
+        <button class="btn btn-outline-light w-100" @onclick="Logout">
             Logout
         </button>
     }
     else
     {
-        <p class="text-secondary">GET STARTED</p>
+        <p class="text-secondary small fw-bold mb-2">GET STARTED</p>
 
-        <NavLink href="/login" class="nav-link text-white">
+        <NavLink href="/login" class="nav-link text-white mb-1">
             Login
         </NavLink>
 
@@ -75,17 +45,9 @@
             Register
         </NavLink>
     }
-
 </div>
 
 @code {
-    private bool projectsOpen;
-
-    private void ToggleProjects()
-    {
-        projectsOpen = !projectsOpen;
-    }
-
     protected override async Task OnInitializedAsync()
     {
         Auth.AuthChanged += OnAuthChanged;
