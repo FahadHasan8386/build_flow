@@ -1,5 +1,5 @@
 ﻿using BuildFlow.Web.Models;
-using BuildFlow.Web.Services.Auth;
+using BuildFlow.Web.Services.Interfaces;
 using System.Net.Http.Json;
 
 namespace BuildFlow.Web.Services

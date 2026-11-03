@@ -2,6 +2,7 @@ using BuildFlow.Web;
 using BuildFlow.Web.Services;
 using BuildFlow.Web.Services.Api;
 using BuildFlow.Web.Services.Auth;
+using BuildFlow.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
