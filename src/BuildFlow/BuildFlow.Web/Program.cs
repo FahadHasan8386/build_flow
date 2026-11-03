@@ -3,6 +3,7 @@ using BuildFlow.Web.Services;
 using BuildFlow.Web.Services.Api;
 using BuildFlow.Web.Services.Auth;
 using BuildFlow.Web.Services.Interfaces;
+using BuildFlow.Web.Services.Project;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -16,6 +17,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseU
 
 builder.Services.AddScoped<ApiClient>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();    
 
 await builder.Build().RunAsync();

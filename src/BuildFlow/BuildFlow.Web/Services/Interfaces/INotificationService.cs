@@ -1,6 +1,6 @@
 ﻿using BuildFlow.Web.Models;
 
-namespace BuildFlow.Web.Services.Auth
+namespace BuildFlow.Web.Services.Interfaces
 {
     public interface INotificationService
     {
