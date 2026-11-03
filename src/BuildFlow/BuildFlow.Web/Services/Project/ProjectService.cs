@@ -1,4 +1,5 @@
 ﻿using BuildFlow.Web.Models;
+using BuildFlow.Web.Models.BuildFlow.Web.Models;
 using BuildFlow.Web.Services.Interfaces;
 using System.Net.Http.Json;
 
@@ -7,7 +8,7 @@ namespace BuildFlow.Web.Services.Project
     public class ProjectService : IProjectService
     {
         private readonly HttpClient _httpClient;
-        private const string BaseUrl = "api/project";
+        private const string BaseUrl = "api/Project";
 
         public ProjectService(HttpClient httpClient)
         {
@@ -18,8 +19,8 @@ namespace BuildFlow.Web.Services.Project
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<List<ProjectDto>>(BaseUrl);
-                return response ?? new List<ProjectDto>();
+                var response = await _httpClient.GetFromJsonAsync<ProjectListResponse>(BaseUrl);
+                return response?.Projects ?? new List<ProjectDto>();
             }
             catch (Exception ex)
             {
@@ -32,7 +33,8 @@ namespace BuildFlow.Web.Services.Project
         {
             try
             {
-                return await _httpClient.GetFromJsonAsync<ProjectDto>($"{BaseUrl}/{id}");
+                var response = await _httpClient.GetFromJsonAsync<ProjectSingleResponse>($"{BaseUrl}/{id}");
+                return response?.Project;
             }
             catch (Exception ex)
             {
@@ -82,6 +84,5 @@ namespace BuildFlow.Web.Services.Project
                 return false;
             }
         }
-
     }
 }
