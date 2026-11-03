@@ -1,0 +1,86 @@
+﻿@page "/projects"
+@using BuildFlow.Web.Models
+@inject HttpClient Http
+
+<PageTitle>Projects - BuildFlow</PageTitle>
+
+<div class="container py-4 text-white">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="m-0 fw-bold">Project List</h3>
+        <span class="badge bg-secondary">Total: @(projects?.Count ?? 0)</span>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="text-secondary mt-2 small">Loading projects...</p>
+        </div>
+    }
+    else if (projects == null || !projects.Any())
+    {
+        <div class="alert alert-dark text-secondary border-secondary">
+            No projects available.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-hover align-middle">
+                <thead class="border-bottom border-secondary">
+                    <tr>
+                        <th>#</th>
+                        <th>Project Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < projects.Count; i++)
+                    {
+                        var project = projects[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td class="fw-bold text-white">@project.Name</td>
+                            <td class="text-secondary small">
+                                @(string.IsNullOrEmpty(project.Description) ? "N/A" : project.Description)
+                            </td>
+                            <td>
+                                @if (project.IsArchived)
+                                {
+                                    <span class="badge bg-secondary">Archived</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<ProjectDto>? projects;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Connects to backend Project API
+            projects = await Http.GetFromJsonAsync<List<ProjectDto>>("api/Project");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching project list: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
