@@ -1,11 +1,10 @@
 ﻿using BuildFlow.Web.Models;
-using BuildFlow.Web.Models.BuildFlow.Web.Models;
 
 namespace BuildFlow.Web.Services.Interfaces
 {
     public interface IProjectService
     {
-      
+
         Task<List<ProjectDto>> GetProjectsAsync();
         Task<ProjectDto?> GetProjectByIdAsync(Guid id);
         Task<bool> CreateProjectAsync(ProjectFormModel model);

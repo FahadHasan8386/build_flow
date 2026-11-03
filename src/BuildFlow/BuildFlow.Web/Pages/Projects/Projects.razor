@@ -1,6 +1,6 @@
 ﻿@page "/projects"
 @using BuildFlow.Web.Models
-@using BuildFlow.Web.Services.Project
+@using BuildFlow.Web.Services.Interfaces
 @inject IProjectService ProjectService
 
 <PageTitle>Projects - BuildFlow</PageTitle>
@@ -73,6 +73,10 @@
         try
         {
             projects = await ProjectService.GetProjectsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading projects in page: {ex.Message}");
         }
         finally
         {

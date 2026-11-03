@@ -1,24 +1,30 @@
 ﻿using BuildFlow.Web.Models;
-using BuildFlow.Web.Models.BuildFlow.Web.Models;
 using BuildFlow.Web.Services.Interfaces;
+using Microsoft.JSInterop;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace BuildFlow.Web.Services.Project
 {
     public class ProjectService : IProjectService
     {
         private readonly HttpClient _httpClient;
+        private readonly IJSRuntime _jsRuntime;
         private const string BaseUrl = "api/Project";
 
-        public ProjectService(HttpClient httpClient)
+        public ProjectService(HttpClient httpClient, IJSRuntime jsRuntime)
         {
             _httpClient = httpClient;
+            _jsRuntime = jsRuntime;
         }
 
         public async Task<List<ProjectDto>> GetProjectsAsync()
         {
             try
             {
+                await AttachBearerTokenAsync();
+
                 var response = await _httpClient.GetFromJsonAsync<ProjectListResponse>(BaseUrl);
                 return response?.Projects ?? new List<ProjectDto>();
             }
@@ -29,16 +35,32 @@ namespace BuildFlow.Web.Services.Project
             }
         }
 
+        private async Task AttachBearerTokenAsync()
+        {
+            var stored = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", "buildflow-auth");
+            if (!string.IsNullOrWhiteSpace(stored))
+            {
+                var payload = JsonSerializer.Deserialize<AuthResponse>(stored);
+                if (!string.IsNullOrWhiteSpace(payload?.AccessToken))
+                {
+                    _httpClient.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", payload.AccessToken);
+                }
+            }
+        }
+
         public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<ProjectSingleResponse>($"{BaseUrl}/{id}");
-                return response?.Project;
+                await AttachBearerTokenAsync();
+
+                var response = await _httpClient.GetFromJsonAsync<ProjectDto>($"{BaseUrl}/{id}");
+                return response;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching project {id}: {ex.Message}");
+                Console.WriteLine($"Error fetching project with id {id}: {ex.Message}");
                 return null;
             }
         }
