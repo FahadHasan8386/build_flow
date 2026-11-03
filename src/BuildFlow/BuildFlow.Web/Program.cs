@@ -12,12 +12,11 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7028/";
-
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseUrl) });
 
 builder.Services.AddScoped<ApiClient>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();    
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 await builder.Build().RunAsync();
