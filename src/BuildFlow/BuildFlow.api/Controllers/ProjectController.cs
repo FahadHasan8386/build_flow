@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace BuildFlow.api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Route("api/projects")]
+    //[Authorize(Roles = "Admin")]
     public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;

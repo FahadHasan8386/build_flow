@@ -5,15 +5,15 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-// For AuthResponse deserialization
-
 namespace BuildFlow.Web.Services.Project
 {
     public class ProjectService : IProjectService
     {
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
-        private const string BaseUrl = "api/Project";
+
+        // Fix 1: Controller-এর [Route("api/projects")] এর সাথে মিল রেখে BaseUrl আপডেট করা হলো
+        private const string BaseUrl = "api/projects";
 
         public ProjectService(HttpClient httpClient, IJSRuntime jsRuntime)
         {
@@ -46,7 +46,8 @@ namespace BuildFlow.Web.Services.Project
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ProjectService Error: {ex.GetType().Name} - {ex.Message}");
+                // Fix 2: C#-এর Multiline string Syntax Error ঠিক করা হলো (\n ব্যবহার করে)
+                Console.WriteLine($"ProjectService Error: {ex.GetType().Name}\n{ex.Message}");
                 Console.WriteLine($"ProjectService Stack trace: {ex.StackTrace}");
                 return new List<ProjectDto>();
             }
@@ -72,8 +73,9 @@ namespace BuildFlow.Web.Services.Project
             {
                 await AttachBearerTokenAsync();
 
-                var response = await _httpClient.GetFromJsonAsync<ProjectDto>($"{BaseUrl}/{id}");
-                return response;
+                // Fix 3: MediatR wrapper matching. GetProjectsAsync এর মত এটিও Wrapper Response রিসিভ করবে
+                var response = await _httpClient.GetFromJsonAsync<ProjectSingleResponse>($"{BaseUrl}/{id}");
+                return response?.Project;
             }
             catch (Exception ex)
             {
@@ -86,6 +88,8 @@ namespace BuildFlow.Web.Services.Project
         {
             try
             {
+                // Fix 4: Create, Update, Delete মেথডগুলোতে Token পাঠানো হচ্ছিল না, যা 401 Unauthorized এরর দিতো
+                await AttachBearerTokenAsync();
                 var response = await _httpClient.PostAsJsonAsync(BaseUrl, model);
                 return response.IsSuccessStatusCode;
             }
@@ -100,6 +104,7 @@ namespace BuildFlow.Web.Services.Project
         {
             try
             {
+                await AttachBearerTokenAsync(); // Token Added
                 var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/{id}", model);
                 return response.IsSuccessStatusCode;
             }
@@ -114,6 +119,7 @@ namespace BuildFlow.Web.Services.Project
         {
             try
             {
+                await AttachBearerTokenAsync(); // Token Added
                 var response = await _httpClient.DeleteAsync($"{BaseUrl}/{id}");
                 return response.IsSuccessStatusCode;
             }
