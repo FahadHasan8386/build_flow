@@ -5,6 +5,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
+// For AuthResponse deserialization
+
 namespace BuildFlow.Web.Services.Project
 {
     public class ProjectService : IProjectService
@@ -23,14 +25,29 @@ namespace BuildFlow.Web.Services.Project
         {
             try
             {
+                Console.WriteLine("ProjectService: Starting GetProjectsAsync");
+
                 await AttachBearerTokenAsync();
+                Console.WriteLine("ProjectService: Bearer token attached");
+
+                var fullUrl = $"{_httpClient.BaseAddress}{BaseUrl}".TrimEnd('/');
+                Console.WriteLine($"ProjectService: Calling API endpoint: {fullUrl}");
 
                 var response = await _httpClient.GetFromJsonAsync<ProjectListResponse>(BaseUrl);
-                return response?.Projects ?? new List<ProjectDto>();
+
+                if (response == null)
+                {
+                    Console.WriteLine("ProjectService: API returned null response");
+                    return new List<ProjectDto>();
+                }
+
+                Console.WriteLine($"ProjectService: API returned {response.Projects?.Count ?? 0} projects");
+                return response.Projects ?? new List<ProjectDto>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching projects: {ex.Message}");
+                Console.WriteLine($"ProjectService Error: {ex.GetType().Name} - {ex.Message}");
+                Console.WriteLine($"ProjectService Stack trace: {ex.StackTrace}");
                 return new List<ProjectDto>();
             }
         }
